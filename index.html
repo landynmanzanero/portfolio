@@ -13,6 +13,14 @@
             padding: 0;
             box-sizing: border-box;
         }
+
+        /* Remove halo/shadow from all images (kept lightweight). */
+        img {
+            box-shadow: none;
+            filter: none;
+            outline: 0;
+            border: 0;
+        }
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
@@ -944,10 +952,15 @@
             height: auto;
             background: transparent;
             border-radius: 0px;
-            box-shadow: 0 18px 46px rgba(0,0,0,0.20);
+            box-shadow: none;
             border: 0;
-            overflow: hidden;
+            overflow: visible;
             transition: transform 420ms cubic-bezier(0.2, 0.9, 0.2, 1), box-shadow 420ms;
+        }
+
+        .photo-stack .card-inner {
+            padding: 0;
+            background: transparent;
         }
 
         .photo-stack .card-inner {
@@ -964,10 +977,14 @@
             object-fit: contain;
             display: block;
             transform: scale(1);
+            border: 0;
+            outline: 0;
+            box-shadow: none;
+            filter: none;
         }
 
         .photo-stack:hover .card {
-            box-shadow: 0 22px 56px rgba(0,0,0,0.22);
+            box-shadow: none;
         }
 
         .photo-stack-hint {
@@ -1963,7 +1980,7 @@
             });
         })();
 
-        // About photo stack shuffle
+        // About photo stack (cycle like a stack)
         (function setupAboutPhotoStack() {
             const stack = document.getElementById('aboutPhotoStack');
             if (!stack) return;
@@ -1979,72 +1996,91 @@
                 "assets/images/about me/IMG_9106.jpeg",
             ];
 
-            let order = photos.slice();
+            const basePositions = [
+                // top, middle, back (inspired by a physical stack)
+                { r: -2, x: 0, y: 0 },
+                { r: 4, x: 14, y: -10 },
+                { r: -6, x: -18, y: 12 },
+            ];
+            const layerScales = [1.0, 0.92, 0.84];
 
-            function shuffleArray(arr) {
-                for (let i = arr.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [arr[i], arr[j]] = [arr[j], arr[i]];
-                }
+            // cardsOrder[0] is TOP, [1] middle, [2] back
+            let cardsOrder = Array.from(stack.querySelectorAll('.card'));
+            let nextPhotoIndex = 0;
+            let animating = false;
+
+            function applyPortraitBoost(imgEl, baseScale) {
+                const w = imgEl.naturalWidth || 0;
+                const h = imgEl.naturalHeight || 0;
+                const isPortrait = w > 0 && h > 0 && h / w >= 1.15;
+                const boost = isPortrait ? 1.14 : 1;
+                const inner = imgEl.closest('.card')?.querySelector('.card-inner') || imgEl;
+                inner.style.setProperty('--s', String(baseScale * boost));
             }
 
-            function apply() {
-                const cards = Array.from(stack.querySelectorAll('.card'));
-                // ensure we have 3 cards
-                const visible = order.slice(0, 3);
-                cards.forEach((card, idx) => {
+            function setCardPosition(card, layerIdx) {
+                const b = basePositions[layerIdx] || basePositions[0];
+                card.style.setProperty('--r', `${b.r}deg`);
+                card.style.setProperty('--x', `${b.x}px`);
+                card.style.setProperty('--y', `${b.y}px`);
+                card.style.zIndex = String(30 - layerIdx);
+            }
+
+            function fillInitial() {
+                // assign three starting images to the stack (top/middle/back)
+                cardsOrder.forEach((card, idx) => {
                     const img = card.querySelector('img');
                     if (!img) return;
-
-                    img.src = visible[idx] || order[0];
-
-                    // randomize position slightly
-                    const r = (Math.random() * 10 - 5).toFixed(1);
-                    const x = (Math.random() * 34 - 17).toFixed(0);
-                    const y = (Math.random() * 26 - 13).toFixed(0);
-                    card.style.setProperty('--r', `${r}deg`);
-                    card.style.setProperty('--x', `${x}px`);
-                    card.style.setProperty('--y', `${y}px`);
-
-                    // subtle size layering so the back peeks out
-                    const scales = [0.92, 0.84, 0.76];
-                    const baseScale = scales[idx] ?? 0.85;
-
-                    function applyPortraitBoost() {
-                        const w = img.naturalWidth || 0;
-                        const h = img.naturalHeight || 0;
-                        const isPortrait = w > 0 && h > 0 && h / w >= 1.15;
-                        const boost = isPortrait ? 1.14 : 1;
-                        const inner = card.querySelector('.card-inner') || card;
-                        inner.style.setProperty('--s', String(baseScale * boost));
-                    }
-
-                    // apply now if already loaded, else after load
-                    if (img.complete) {
-                        applyPortraitBoost();
-                    } else {
-                        img.onload = applyPortraitBoost;
-                    }
-
-                    // z-index so last card is on top
-                    card.style.zIndex = String(10 + idx);
+                    img.src = photos[(nextPhotoIndex + idx) % photos.length];
+                    const baseScale = layerScales[idx] ?? 1;
+                    if (img.complete) applyPortraitBoost(img, baseScale);
+                    else img.addEventListener('load', () => applyPortraitBoost(img, baseScale), { once: true });
+                    setCardPosition(card, idx);
                 });
+                nextPhotoIndex = (nextPhotoIndex + cardsOrder.length) % photos.length;
             }
 
-            function shuffle() {
-                shuffleArray(order);
-                apply();
+            function advanceStack() {
+                if (animating) return;
+                animating = true;
+
+                // Move top card to back
+                const topCard = cardsOrder[0];
+                cardsOrder = [cardsOrder[1], cardsOrder[2], topCard];
+
+                // Update positions (smooth via CSS transition on transform)
+                cardsOrder.forEach((card, idx) => setCardPosition(card, idx));
+
+                // Once movement finishes, swap the image on the new back card (the card we moved)
+                const onDone = (e) => {
+                    if (e && e.propertyName && e.propertyName !== 'transform') return;
+
+                    const img = topCard.querySelector('img');
+                    if (img) {
+                        img.src = photos[nextPhotoIndex % photos.length];
+                        nextPhotoIndex = (nextPhotoIndex + 1) % photos.length;
+
+                        const baseScale = layerScales[2] ?? 0.84;
+                        if (img.complete) applyPortraitBoost(img, baseScale);
+                        else img.addEventListener('load', () => applyPortraitBoost(img, baseScale), { once: true });
+                    }
+
+                    animating = false;
+                };
+
+                // listen on the moved card (it is now back, still transitions)
+                topCard.addEventListener('transitionend', onDone, { once: true });
             }
 
-            stack.addEventListener('click', shuffle);
+            stack.addEventListener('click', advanceStack);
             stack.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    shuffle();
+                    advanceStack();
                 }
             });
 
-            shuffle();
+            fillInitial();
         })();
 
         // Handle browser back button
