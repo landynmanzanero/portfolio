@@ -1446,6 +1446,17 @@
             }
         }
 
+        @media (max-width: 768px) {
+            .home-hero,
+            .home-hero-inner {
+                overflow-x: hidden;
+                max-width: 100%;
+            }
+            .home-details {
+                max-width: 100%;
+            }
+        }
+
         /* Home work gallery */
         .home-gallery {
             padding: 0px 60px 120px;
@@ -1651,6 +1662,26 @@
         }
         
         @media (max-width: 768px) {
+            /* Restore default cursor, hide custom cursor dot on mobile */
+            .cursor-dot {
+                display: none !important;
+            }
+            html, body,
+            a, button,
+            .nav-link,
+            .nav-icon-link,
+            .gallery-card,
+            .sidebar-item,
+            .sidebar-back,
+            .photo-stack {
+                cursor: auto !important;
+            }
+
+            /* Hide sidebar on project pages for mobile */
+            [id^="project-"] .sidebar {
+                display: none;
+            }
+
             .sidebar {
                 width: 180px;
             }
@@ -1682,6 +1713,29 @@
 
             .proto-images {
                 grid-template-columns: 1fr;
+            }
+
+            /* Gallery cards: show overlay + title by default on mobile (no hover) */
+            .gallery-card .gallery-overlay {
+                background: rgba(0,0,0,0.35);
+            }
+            .gallery-card .gallery-meta {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            /* Cursive words: show hover colors by default on mobile (no hover) */
+            .home-cursive-connection {
+                color: #F3D98F;
+            }
+            .home-cursive-intuitive {
+                color: #7298C7;
+            }
+            .home-cursive-inclusive {
+                color: #F18C22;
+            }
+            .home-cursive-human {
+                color: #B4B535;
             }
         }
     </style>
@@ -2625,12 +2679,15 @@
                 const activeHome = document.getElementById('home')?.classList.contains('active');
                 if (!activeHome) return;
 
+                const isMobile = window.matchMedia('(max-width: 768px)').matches;
                 const heroTop = hero.getBoundingClientRect().top + window.scrollY;
                 const tRaw = clamp01((window.scrollY - heroTop) / 800);
                 const t = easeOutCubic(tRaw);
 
                 const nameScale = lerp(1, 0.42, t);
-                const detailsScale = lerp(0.9, 1.32, t);
+                const detailsScale = isMobile
+                    ? lerp(0.72, 1, t)
+                    : lerp(0.9, 1.32, t);
                 const nameY = lerp(0, -18, t);
 
                 hero.style.setProperty('--homeNameScale', String(nameScale));
