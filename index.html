@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Landy - Designer + Developer</title>
+    <title>Landy Manzanero</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
@@ -2510,6 +2511,21 @@
     <script>
         let currentPage = 'home';
         let history = ['home'];
+
+        const PAGE_TITLES = {
+            'home': 'Landy Manzanero',
+            'about': 'Landy Manzanero — About',
+            'work': 'Landy Manzanero — Work',
+            'project-commbank': 'Landy Manzanero — Commonwealth Bank',
+            'project-annafreud': 'Landy Manzanero — Anna Freud',
+            'project-baro': 'Landy Manzanero — Baro Behavior',
+            'project-sur': 'Landy Manzanero — SUR',
+            'project-salamati': 'Landy Manzanero — Salamati'
+        };
+
+        function updatePageTitle(pageId) {
+            document.title = PAGE_TITLES[pageId] || 'Landy Manzanero';
+        }
         
         // Create custom cursor dot
         (function setupCustomCursor() {
@@ -2845,6 +2861,7 @@
                 document.getElementById(currentPage).classList.remove('active');
                 document.getElementById(previousPage).classList.add('active');
                 currentPage = previousPage;
+                updatePageTitle(previousPage);
             }
         });
     </script>
