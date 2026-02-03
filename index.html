@@ -6,7 +6,10 @@
     <title>Landy - Designer + Developer</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Baskervville:ital@0;1&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Ballet:opsz@16..72&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
         
         * {
             margin: 0;
@@ -16,7 +19,7 @@
 
         /* Remove halo/shadow from all images (kept lightweight). */
         img {
-            box-shadow: none;
+            box-shadow: none !important;
             filter: none;
             outline: 0;
             border: 0;
@@ -24,9 +27,23 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
-            background: #f5f5f7;
+            background: #ffffff;
             color: #1d1d1f;
             overflow-x: hidden;
+            padding-top: 60px;
+            cursor: none;
+        }
+
+        /* Hide system cursor everywhere, including over interactive elements */
+        html, body,
+        a, button,
+        .nav-link,
+        .nav-icon-link,
+        .gallery-card,
+        .sidebar-item,
+        .sidebar-back,
+        .photo-stack {
+            cursor: none !important;
         }
 
         :root {
@@ -58,7 +75,115 @@
             opacity: 1;
             pointer-events: all;
         }
+
+        /* Custom circular cursor */
+        .cursor-dot {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #B4B535;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.15s ease-out, transform 0.12s ease-out;
+        }
+
+        .cursor-dot.is-hovering {
+            opacity: 0.4;
+            transform: translate(-50%, -50%) scale(0.9);
+        }
         
+        /* Top navigation */
+        .site-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            padding: 0 60px;
+            background: rgba(255,255,255,0.96);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 220;
+            backdrop-filter: blur(14px);
+        }
+
+        .nav-left,
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .nav-link {
+            cursor: pointer;
+            text-transform: lowercase;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .nav-icon-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border-radius: 999px;
+            border: 1px solid rgba(0,0,0,0.16);
+            font-size: 11px;
+            transition: background 200ms ease, border-color 200ms ease, transform 180ms ease;
+            color: #1d1d1f;
+        }
+
+        .nav-icon-link svg {
+            width: 15px;
+            height: 15px;
+            display: block;
+            fill: currentColor;
+        }
+
+        .site-nav a.nav-link:link,
+        .site-nav a.nav-link:visited {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .site-nav .nav-link:hover,
+        .site-nav .nav-link:focus-visible {
+            background: linear-gradient(90deg, #E36887, #EA7A55, #F3D98F);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .nav-icon-link:hover,
+        .nav-icon-link:focus-visible {
+            background: rgba(0,0,0,0.06);
+            border-color: rgba(0,0,0,0.32);
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 900px) {
+            .site-nav {
+                padding: 0 20px;
+                height: 56px;
+            }
+            .nav-left,
+            .nav-right {
+                gap: 14px;
+                font-size: 13px;
+            }
+            body {
+                padding-top: 56px;
+            }
+        }
+
         /* Home Page */
         .home-page {
             display: flex;
@@ -171,7 +296,7 @@
             width: 140px;
             height: 110px;
             position: relative;
-            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.12));
+            filter: none;
         }
         
         .folder-back {
@@ -202,11 +327,11 @@
         
         /* Window Chrome (Work & Project Pages) */
         .window {
-            height: 100vh;
+            height: calc(100vh - 60px);
             min-height: 0;
             display: flex;
             flex-direction: column;
-            background: #f5f5f7;
+            background: #ffffff;
         }
         
         .window-header {
@@ -274,46 +399,83 @@
         
         /* Sidebar */
         .sidebar {
-            width: 220px;
-            background: rgba(235, 235, 235, 0.6);
-            backdrop-filter: blur(20px);
-            border-right: 1px solid #d1d1d6;
-            padding: 24px 0;
+            width: 280px;
+            background: transparent;
+            border-right: none;
+            padding: 28px 0;
         }
         
         .sidebar-section {
             margin-bottom: 24px;
         }
         
-        .sidebar-title {
-            font-size: 11px;
-            font-weight: 600;
-            color: #6e6e73;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            padding: 0 16px;
-            margin-bottom: 8px;
-        }
-        
         .sidebar-item {
-            padding: 6px 16px;
-            font-size: 13px;
-            color: #1d1d1f;
+            padding: 10px 24px;
+            font-size: 17px;
+            color: #8e8e93;
             cursor: pointer;
-            transition: background 0.15s;
+            font-family: 'Inter', -apple-system, sans-serif;
+            transition: background 0.15s, color 0.15s;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            position: relative;
+        }
+
+        .sidebar-item::before {
+            content: "";
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #B4B535;
+            transform: translateY(-50%);
+            opacity: 0;
+            transition: opacity 0.15s;
         }
         
         .sidebar-item:hover {
-            background: rgba(0, 0, 0, 0.04);
+            background: rgba(0, 0, 0, 0.03);
+            color: #1d1d1f;
         }
         
         .sidebar-item.active {
-            background: rgba(0, 122, 255, 0.15);
-            color: #007aff;
-            font-weight: 500;
+            background: transparent;
+            color: #1d1d1f;
+            font-weight: 600;
+            padding-left: 24px;
+        }
+
+        .sidebar-item.active::before {
+            opacity: 0;
+        }
+
+        .sidebar-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin: 0 24px 24px;
+            font-family: 'Inter', -apple-system, sans-serif;
+            padding: 0;
+            border: none;
+            background: transparent;
+            font-size: 17px;
+            color: #8e8e93;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+        }
+
+        .sidebar-back::before {
+            content: '←';
+            font-size: 17px;
+        }
+
+        .sidebar-back:hover,
+        .sidebar-back:focus-visible {
+            color: #1d1d1f;
         }
         
         /* Main Content Area */
@@ -321,6 +483,10 @@
             flex: 1;
             overflow-y: auto;
             padding: 40px 60px;
+        }
+
+        .content-area.project-content {
+            padding: 40px 48px 60px 48px;
         }
         
         /* Work Grid */
@@ -414,16 +580,18 @@
         
         .meta-item h3 {
             font-size: 11px;
-            font-weight: 600;
+            font-weight: 500;
             color: #6e6e73;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-bottom: 8px;
+            font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
         }
         
         .meta-item p {
             font-size: 14px;
-            color: #1d1d1f;
+            font-weight: 400;
+            color: #8e8e93;
             line-height: 1.5;
         }
         
@@ -432,18 +600,20 @@
         }
         
         .section-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: #1d1d1f;
+            font-size: 14px;
+            font-weight: 400;
+            color: #8e8e93;
             margin-bottom: 16px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.08em;
+            font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
         }
         
         .section-content {
             font-size: 15px;
             line-height: 1.8;
-            color: #1d1d1f;
+            color: #8e8e93;
+            font-family: 'Inter', -apple-system, sans-serif;
         }
         
         .section-content p {
@@ -452,8 +622,8 @@
         
         .section-content em {
             font-style: italic;
-            color: #007aff;
-            font-weight: 500;
+            color: #6e6e73;
+            font-weight: 400;
         }
         
         .section-content ul {
@@ -471,8 +641,8 @@
             content: "•";
             position: absolute;
             left: 8px;
-            color: #007aff;
-            font-weight: bold;
+            color: #6e6e73;
+            font-weight: normal;
         }
         
         .subsection {
@@ -480,10 +650,80 @@
         }
         
         .subsection h3 {
-            font-size: 16px;
+            font-size: 20px;
             font-weight: 600;
             color: #1d1d1f;
             margin-bottom: 12px;
+            font-family: 'Baskervville', Georgia, serif;
+        }
+
+        .findings-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px 40px;
+            margin-top: 20px;
+        }
+
+        .finding-item {
+            padding: 0;
+            background: transparent;
+            border-radius: 0;
+        }
+
+        .finding-label {
+            font-family: 'Baskervville', Georgia, serif !important;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1d1d1f;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .finding-item p {
+            font-size: 14px;
+            font-family: 'Inter', -apple-system, sans-serif;
+            color: #6e6e73;
+            margin-bottom: 0;
+            line-height: 1.5;
+        }
+
+        .takeaway-label {
+            font-family: 'Baskervville', Georgia, serif !important;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+
+        .dev-prioritize-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .persona-name {
+            font-family: 'Baskervville', Georgia, serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-top: 16px;
+            margin-bottom: 8px;
+        }
+
+        .hmw-question {
+            font-family: 'Baskervville', Georgia, serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: #1d1d1f;
+            line-height: 1.4;
+            margin: 16px 0 24px;
+        }
+
+        /* Ideation & Prioritization: smaller images */
+        #ideation .section-content > img,
+        #ideation .subsection img,
+        #af-ideation .media-grid img {
+            max-width: 72%;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
         }
 
         /* Prototype (compact layout) */
@@ -493,42 +733,51 @@
 
         .proto-step {
             display: grid;
-            grid-template-columns: minmax(260px, 0.9fr) minmax(0, 1.1fr);
-            gap: 24px;
+            grid-template-columns: minmax(160px, 0.28fr) minmax(0, 1fr);
+            gap: 32px;
             align-items: start;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.8);
-            border: 1px solid rgba(0, 0, 0, 0.06);
-            border-radius: 14px;
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+            padding: 0;
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
         }
 
         .proto-copy h3 {
-            margin-bottom: 10px;
+            font-family: 'Baskervville', Georgia, serif;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 6px;
         }
 
         .proto-copy p {
             margin-bottom: 0;
-            color: #1d1d1f;
+            font-size: 13px;
+            color: #6e6e73;
+            line-height: 1.5;
         }
 
         .proto-images {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 14px;
+            gap: 20px;
             align-items: start;
         }
 
         .proto-images img {
             width: 100%;
             height: auto;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.10);
-            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: 4px;
+            transition: transform 0.3s ease-out;
+        }
+
+        .proto-images img:hover {
+            transform: scale(1.08);
         }
 
         .proto-images img:only-child {
             grid-column: 1 / -1;
+            max-width: 100%;
         }
         
         /* Small image grids (research/ideation) */
@@ -578,6 +827,67 @@
             margin-bottom: 0;
         }
 
+        .usability-timeline {
+            margin-top: 28px;
+            position: relative;
+        }
+
+        .usability-timeline .timeline-duration {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 14px;
+            color: #8e8e93;
+            margin-bottom: 20px;
+        }
+
+        .usability-timeline .timeline-duration .finding-label {
+            margin-right: 8px;
+        }
+
+        .usability-timeline .timeline-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            position: relative;
+            padding-left: 28px;
+        }
+
+        .usability-timeline .timeline-steps::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            border-radius: 2px;
+            background: linear-gradient(180deg, #f2a7c6 0%, #c9a8e8 50%, #9fe2d0 100%);
+        }
+
+        .usability-timeline .timeline-step {
+            padding: 20px 0;
+            padding-left: 0;
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            position: relative;
+        }
+
+        .usability-timeline .timeline-step:not(:last-child) {
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .usability-timeline .timeline-step .finding-label {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .usability-timeline .timeline-step p {
+            font-size: 14px;
+            line-height: 1.55;
+            color: #8e8e93;
+            margin-bottom: 0;
+            font-family: 'Inter', -apple-system, sans-serif;
+        }
+
         @media (max-width: 900px) {
             .media-grid,
             .media-grid.two {
@@ -587,12 +897,20 @@
             .insights-grid {
                 grid-template-columns: 1fr;
             }
+
+            .usability-timeline .timeline-steps {
+                padding-left: 24px;
+            }
+
+            .usability-timeline .timeline-steps::before {
+                width: 3px;
+            }
         }
 
         /* Anna Freud subtle theme */
         #project-annafreud .sidebar-item.active {
-            background: rgba(242, 167, 198, 0.28);
-            color: var(--af-navy);
+            background: transparent;
+            color: #1d1d1f;
             font-weight: 600;
         }
 
@@ -610,8 +928,8 @@
         }
 
         #project-annafreud .sidebar {
-            background: rgba(35, 43, 85, 0.06);
-            border-right-color: rgba(35, 43, 85, 0.12);
+            background: transparent;
+            border-right: none;
         }
 
         #project-annafreud .sidebar-title {
@@ -619,95 +937,99 @@
         }
 
         #project-annafreud .sidebar-item:hover {
-            background: rgba(35, 43, 85, 0.05);
+            background: rgba(0, 0, 0, 0.03);
+            color: #1d1d1f;
         }
 
         .project-banner {
-            border-radius: 16px;
-            padding: 28px 28px;
+            border-radius: 0;
+            overflow: hidden;
+            padding: 48px 40px;
             margin-bottom: 32px;
-            border: 1px solid rgba(0,0,0,0.08);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.06);
-            background: white;
+            border: none;
+            box-shadow: none;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 140px;
         }
 
+        .project-banner-annafreud {
+            background: linear-gradient(90deg, #f2a7c6 0%, #c9a8e8 50%, #9fe2d0 100%);
+        }
+
+        .project-banner-annafreud h1 {
+            color: #ffffff;
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .project-banner-annafreud p {
+            display: none;
+        }
+
+        .project-banner-commbank {
+            border-radius: 0;
+            overflow: hidden;
+            background: linear-gradient(90deg, #f5d93d 0%, #ffed7a 50%, #fff9c4 100%);
+            padding: 48px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 160px;
+        }
+
+        .project-banner-commbank h1 {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            text-shadow: none;
+            margin-left: 0;
+        }
+
+        .project-banner-commbank p {
+            display: none;
+        }
+
+        .project-subtitle {
+            font-family: 'IBM Plex Mono', ui-monospace, monospace;
+            font-size: 11px;
+            font-weight: 500;
+            color: #8e8e93;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 12px;
+        }
+
+        .project-title-hero {
+            font-family: 'Baskervville', Georgia, serif;
+            font-size: 36px;
+            font-weight: 600;
+            color: #1d1d1f;
+            line-height: 1.25;
+            margin-bottom: 28px;
+        }
+        
         .project-banner h1 {
             font-size: 28px;
             font-weight: 700;
             margin-bottom: 6px;
         }
-
+        
         .project-banner p {
             color: #6e6e73;
             font-size: 15px;
             margin-bottom: 0;
         }
 
-        #project-annafreud .project-banner {
-            background:
-                radial-gradient(900px 220px at 15% 15%, rgba(242, 167, 198, 0.35) 0%, rgba(242, 167, 198, 0) 60%),
-                radial-gradient(700px 220px at 85% 20%, rgba(159, 226, 208, 0.30) 0%, rgba(159, 226, 208, 0) 55%),
-                linear-gradient(135deg, rgba(35, 43, 85, 0.10) 0%, rgba(255,255,255,1) 55%);
-            border-color: rgba(35, 43, 85, 0.18);
-        }
-
-        #project-commbank .project-banner {
-            background: linear-gradient(135deg, rgba(0, 122, 255, 0.12) 0%, rgba(255,255,255,1) 55%);
-            border-color: rgba(0, 122, 255, 0.22);
-        }
-
         /* CommBank theme */
-        /* Keep CommBank window chrome neutral (same as default). */
-        #project-commbank .window-title {
-            color: var(--cb-deep);
-        }
-
-        #project-commbank .sidebar-item.active {
-            background: rgba(255, 217, 61, 0.40);
-            color: var(--cb-deep);
-            font-weight: 600;
-        }
-
-        #project-commbank .project-banner {
-            background:
-                radial-gradient(900px 240px at 18% 18%, rgba(255, 217, 61, 0.48) 0%, rgba(255, 217, 61, 0) 62%),
-                radial-gradient(760px 260px at 88% 24%, rgba(255, 244, 194, 0.80) 0%, rgba(255, 244, 194, 0) 58%),
-                linear-gradient(135deg, rgba(255, 253, 243, 1) 0%, rgba(255,255,255,1) 60%);
-            border-color: rgba(255, 217, 61, 0.28);
-        }
-
-        #project-commbank .section-title {
-            color: var(--cb-deep);
-            position: relative;
-        }
-
-        #project-commbank .section-title::after {
-            content: "";
-            display: block;
-            width: 54px;
-            height: 3px;
-            border-radius: 999px;
-            margin-top: 10px;
-            background: linear-gradient(90deg, var(--cb-gold), rgba(255, 217, 61, 0.0));
-            opacity: 0.9;
-        }
-
-        #project-commbank .project-meta {
-            border-radius: 14px;
-            background: rgba(255, 253, 243, 0.70);
-            border: 1px solid rgba(255, 217, 61, 0.22);
-            padding: 18px 18px;
-        }
-
-        #project-commbank .proto-step {
-            background: rgba(255, 255, 255, 0.82);
-            border-color: rgba(255, 217, 61, 0.22);
-        }
-
-        #project-commbank .proto-images img {
-            border-color: rgba(255, 217, 61, 0.22);
-        }
-
         #project-annafreud .section-title {
             color: var(--af-navy);
             position: relative;
@@ -725,10 +1047,10 @@
         }
 
         #project-annafreud .project-meta {
-            border-radius: 14px;
-            background: rgba(255, 255, 255, 0.85);
-            border: 1px solid rgba(35, 43, 85, 0.10);
-            padding: 18px 18px;
+            border-radius: 0;
+            background: transparent;
+            border: none;
+            padding: 0;
         }
 
         #project-annafreud .insight-card {
@@ -786,7 +1108,7 @@
 
         /* About page (creative collage) */
         #about .content-area {
-            background: #fff4bf;
+            background: #ffffff;
         }
 
         .about-collage {
@@ -821,23 +1143,26 @@
         }
 
         .about-note h1 {
-            font-family: "Inter", system-ui, sans-serif;
-            font-size: 66px;
-            font-weight: 900;
-            letter-spacing: -0.04em;
-            text-transform: lowercase;
-            color: #111;
-            margin-bottom: 16px;
-        }
-
-        .about-note p {
-            font-size: 16px;
-            line-height: 1.85;
+            font-family: 'Baskervville', Georgia, serif;
+            font-size: 48px;
+            font-weight: 600;
+            line-height: 1.3;
             color: #1d1d1f;
-            margin-bottom: 14px;
+            margin-bottom: 28px;
         }
 
-        .about-note p:last-child {
+        .about-note .about-body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 16px;
+            line-height: 1.8;
+            color: #8e8e93;
+        }
+
+        .about-note .about-body p {
+            margin-bottom: 20px;
+        }
+
+        .about-note .about-body p:last-child {
             margin-bottom: 0;
         }
 
@@ -1003,6 +1328,235 @@
                 height: 360px;
             }
         }
+
+        /* New landing hero (scroll type) */
+        #home.home-scroll {
+            position: relative;
+            min-height: calc(100vh + 420px);
+            background: white;
+        }
+
+        #home.home-scroll.home-page {
+            display: block;
+            align-items: unset;
+            justify-content: unset;
+            background: white;
+        }
+
+        .home-hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 60px;
+            background: white;
+        }
+
+        .home-hero-inner {
+            width: 100%;
+            max-width: 1080px;
+            display: grid;
+            grid-template-rows: auto auto auto;
+            justify-items: start;
+            gap: 26px;
+        }
+
+        .home-name-wrap {
+            width: 100%;
+            position: relative;
+        }
+
+        .home-name {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 86px;
+            font-weight: 900;
+            letter-spacing: 0.02em;
+            line-height: 1;
+            transform-origin: left top;
+            transform: translateY(calc(var(--homeNameY, 0px))) scale(var(--homeNameScale, 1));
+            transition: transform 0.18s cubic-bezier(0.2, 0.7, 0.25, 1);
+        }
+
+        .home-details {
+            width: 100%;
+            max-width: 720px;
+            transform-origin: left top;
+            transform: scale(var(--homeDetailsScale, 0.92));
+            transition: transform 0.18s cubic-bezier(0.2, 0.7, 0.25, 1);
+        }
+
+        .home-details p {
+            font-size: 30px;
+            font-weight: 650;
+            line-height: 1.15;
+            letter-spacing: -0.01em;
+        }
+
+        .home-details-strong {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-weight: 800;
+        }
+
+        .home-details-line {
+            display: block;
+        }
+
+        .home-cursive {
+            font-family: 'Instrument Serif', serif;
+            font-style: italic;
+            font-weight: 400;
+            font-size: 1.06em;
+            transition: color 160ms ease;
+            cursor: default;
+        }
+
+        .home-cursive-connection:hover {
+            color: #F3D98F;
+        }
+
+        .home-cursive-intuitive:hover {
+            color: #7298C7;
+        }
+
+        .home-cursive-inclusive:hover {
+            color: #F18C22;
+        }
+
+        .home-cursive-human:hover {
+            color: #B4B535;
+        }
+
+        .home-scroll-spacer {
+            height: 0px;
+        }
+
+        @media (max-width: 900px) {
+            .home-hero {
+                padding: 64px 28px;
+            }
+
+            .home-name {
+                font-size: 54px;
+            }
+
+            .home-details p {
+                font-size: 20px;
+            }
+        }
+
+        /* Home work gallery */
+        .home-gallery {
+            padding: 0px 60px 120px;
+            background: white;
+        }
+
+        .home-gallery-inner {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .home-gallery-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .gallery-card {
+            position: relative;
+            border-radius: 0px;
+            overflow: hidden;
+            background: white;
+            border: 1px solid rgba(0,0,0,0.10);
+            cursor: pointer;
+            min-height: 340px;
+        }
+
+        .gallery-media {
+            position: absolute;
+            inset: 0;
+            background: #f5f5f7;
+        }
+
+        .gallery-media img,
+        .gallery-media video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery-media video {
+            opacity: 0;
+            transition: opacity 180ms ease;
+        }
+
+        .gallery-card.has-video .gallery-media img {
+            transition: opacity 180ms ease;
+        }
+
+        .gallery-card.has-video:hover .gallery-media video {
+            opacity: 1;
+        }
+
+        .gallery-card.has-video:hover .gallery-media img {
+            opacity: 0;
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.0);
+            transition: background 520ms ease-out;
+        }
+
+        .gallery-meta {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 520ms ease-out, transform 520ms ease-out;
+            color: white;
+            text-shadow: 0 6px 18px rgba(0,0,0,0.45);
+        }
+
+        .gallery-title {
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .gallery-subtitle {
+            font-size: 13px;
+            font-weight: 600;
+            opacity: 0.92;
+        }
+
+        .gallery-card:hover .gallery-overlay {
+            background: rgba(0,0,0,0.35);
+        }
+
+        .gallery-card:hover .gallery-meta {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 900px) {
+            .home-gallery {
+                padding: 56px 28px 96px;
+            }
+
+            .home-gallery-grid {
+                grid-template-columns: 1fr;
+            }
+        }
         
         .about-section h2 {
             font-size: 28px;
@@ -1113,6 +1667,14 @@
                 grid-template-columns: repeat(2, 1fr);
             }
 
+            .findings-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .dev-prioritize-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
             .proto-step {
                 grid-template-columns: 1fr;
             }
@@ -1124,36 +1686,98 @@
     </style>
 </head>
 <body>
+    <header class="site-nav">
+        <div class="nav-left">
+            <span class="nav-link" onclick="navigateTo('home')">work</span>
+            <a class="nav-link" href="#" target="_blank" rel="noopener">resume</a>
+        </div>
+        <div class="nav-right">
+            <span class="nav-link" onclick="navigateTo('about')">about</span>
+            <a class="nav-icon-link" href="https://www.linkedin.com/in/landynmanzanero/" target="_blank" rel="noopener" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="3" y="3" width="18" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"></rect>
+                    <rect x="7" y="10" width="2" height="7" fill="currentColor"></rect>
+                    <circle cx="8" cy="7" r="1.2" fill="currentColor"></circle>
+                    <path d="M12.5 10h1.9v1c.4-.7 1.1-1.2 2.1-1.2 1.6 0 2.7 1 2.7 3.1v3.9h-2.1v-3.5c0-1-.3-1.6-1.1-1.6-.9 0-1.3.7-1.3 1.7v3.4h-2.2z" fill="currentColor"></path>
+                </svg>
+            </a>
+            <a class="nav-icon-link" href="mailto:landynmanzanero@berkeley.edu" aria-label="Email">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"></rect>
+                    <polyline points="5,7 12,12 19,7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                </svg>
+            </a>
+        </div>
+    </header>
     <!-- HOME PAGE -->
-    <div id="home" class="page active home-page">
-        <div class="home-content">
-            <div class="left-section">
-                <div class="welcome-section">
-                    <h1>Welcome</h1>
-                    <div class="photo-placeholder"></div>
+    <div id="home" class="page active home-page home-scroll">
+        <div class="home-hero" id="homeHero">
+            <div class="home-hero-inner">
+                <div class="home-name-wrap" aria-label="Landy Manzanero">
+                    <h1 class="home-name">LANDY MANZANERO</h1>
                 </div>
-                <div class="intro-box">
-                    <h2>I'm Landy</h2>
-                    <p>Designer + Developer</p>
+
+                <div class="home-details">
+                    <p>
+                        <span class="home-details-line">
+                            <span class="home-details-strong">A product designer and engineer inspired by </span>
+                            <em class="home-cursive home-cursive-connection">connection</em><span class="home-details-strong">.</span>
+                        </span>
+                        <span class="home-details-line">
+                            <span class="home-details-strong">Building technologies that feel </span>
+                            <em class="home-cursive home-cursive-intuitive">intuitive</em><span class="home-details-strong">, </span>
+                            <em class="home-cursive home-cursive-inclusive">inclusive</em><span class="home-details-strong">, and </span>
+                            <em class="home-cursive home-cursive-human">human</em><span class="home-details-strong">.</span>
+                        </span>
+                    </p>
                 </div>
-            </div>
-            <div class="folders-section">
-                <div class="folder-item" onclick="navigateTo('about')">
-                    <div class="folder-icon">
-                        <div class="folder-back"></div>
-                        <div class="folder-front"></div>
-                    </div>
-                    <div class="folder-label">About Me</div>
-                </div>
-                <div class="folder-item" onclick="navigateTo('work')">
-                    <div class="folder-icon">
-                        <div class="folder-back"></div>
-                        <div class="folder-front"></div>
-                    </div>
-                    <div class="folder-label">Work</div>
-                </div>
+
+                
             </div>
         </div>
+        <div class="home-scroll-spacer" aria-hidden="true"></div>
+
+        <section class="home-gallery" id="homeGallery" aria-label="Work gallery">
+            <div class="home-gallery-inner">
+                <div class="home-gallery-grid">
+                    <div class="gallery-card" role="button" tabindex="0" onclick="showProject('commbank')">
+                        <div class="gallery-media">
+                            <img src="assets/images/commonwealth/Start.png" alt="CommonWealth Bank project preview">
+                        </div>
+                        <div class="gallery-overlay"></div>
+                        <div class="gallery-meta">
+                            <div class="gallery-title">CommonWealth Bank</div>
+                        </div>
+                    </div>
+
+                    <div class="gallery-card" role="button" tabindex="0" onclick="showProject('annafreud')">
+                        <div class="gallery-media">
+                            <img src="assets/images/annafreud/AskAnnaAI Home.png" alt="Anna Freud project preview">
+                        </div>
+                        <div class="gallery-overlay"></div>
+                        <div class="gallery-meta">
+                            <div class="gallery-title">Anna Freud</div>
+                        </div>
+                    </div>
+
+                    <div class="gallery-card" role="button" tabindex="0" onclick="alert('Add Baro Behavior project page next')">
+                        <div class="gallery-media"></div>
+                        <div class="gallery-overlay"></div>
+                        <div class="gallery-meta">
+                            <div class="gallery-title">Baro Behavior</div>
+                        </div>
+                    </div>
+
+                    <div class="gallery-card" role="button" tabindex="0" onclick="alert('Add SUR project page next')">
+                        <div class="gallery-media"></div>
+                        <div class="gallery-overlay"></div>
+                        <div class="gallery-meta">
+                            <div class="gallery-title">SUR</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 
     <!-- ABOUT ME PAGE -->
@@ -1178,22 +1802,15 @@
                             <div class="about-collage-inner">
                                 <div>
                                     <div class="about-note">
-                                        <h1>about me</h1>
-                                        <p>I’m a designer and developer who likes making things feel friendly. I care about clarity, rhythm, and the little moments that make an interface feel alive.</p>
-                                        <p>I study EECS and I like moving fast from idea to something you can click. My favorite projects mix research, storytelling, and clean UI with just enough personality.</p>
-                                        <p>Right now I’m focused on product design, human centered systems, and shipping work that is both useful and fun to use.</p>
+                                        <h1>I'm Landy, I believe the best products are built with both empathy and intention.</h1>
+                                        <div class="about-body">
+                                            <p>A first-generation latinx designer with an engineering background, passionate about creating human-centered products that make complex systems feel simple and accessible. Growing up, I learned early how powerful thoughtful design can be, especially when technology becomes a bridge rather than a barrier.</p>
+                                        <p>My work lives at the intersection of empathy and technical problem-solving. I'm drawn to projects that prioritize real people, meaningful connection, and long-term impact.</p>
+                                            <p>Outside of design, you can find me at the gym, trying out new recipes in the kitchen, and getting lost in Substack essays that challenge how I think.</p>
+                                        </div>
 
-                                        <div class="about-signature">Landy</div>
                                     </div>
 
-                                    <div class="about-bottom">
-                                        <span class="about-pill">Designer + Developer</span>
-                                        <span class="about-pill">EECS</span>
-                                        <span class="about-pill">Figma</span>
-                                        <span class="about-pill">React</span>
-                                        <span class="about-pill">Research</span>
-                                        <span class="about-pill">Prototyping</span>
-                                    </div>
                                 </div>
                                 <div>
                                     <div class="about-stack-wrap">
@@ -1225,26 +1842,14 @@
         </div>
     </div>
 
-    <!-- WORK PAGE -->
+    <!-- WORK PAGE (text-only list, no folders/window chrome) -->
     <div id="work" class="page">
         <div class="window">
-            <div class="window-header">
-                <div class="window-dots">
-                    <div class="dot red" onclick="navigateTo('home')"></div>
-                    <div class="dot yellow"></div>
-                    <div class="dot green"></div>
-                </div>
-                <div class="nav-arrows">
-                    <div class="nav-arrow" onclick="navigateTo('home')">←</div>
-                    <div class="nav-arrow">→</div>
-                </div>
-                <div class="window-title">Work</div>
-            </div>
             <div class="window-body">
                 <div class="sidebar">
                     <div class="sidebar-section">
                         <div class="sidebar-title">Work</div>
-                        <div class="sidebar-item active" onclick="showProject('commbank')">CommonWealth Bank</div>
+                        <div class="sidebar-item" onclick="showProject('commbank')">CommonWealth Bank</div>
                         <div class="sidebar-item" onclick="showProject('annafreud')">Anna Freud</div>
                         <div class="sidebar-item" onclick="showProject('baro')">Baro Behavior</div>
                         <div class="sidebar-item" onclick="showProject('sur')">SUR</div>
@@ -1252,43 +1857,9 @@
                     </div>
                 </div>
                 <div class="content-area">
-                    <div class="work-grid">
-                        <div class="project-folder" onclick="showProject('commbank')">
-                            <div class="folder-icon">
-                                <div class="folder-back"></div>
-                                <div class="folder-front"></div>
-                            </div>
-                            <div class="project-name">CommonWealth Bank</div>
-                        </div>
-                        <div class="project-folder" onclick="showProject('annafreud')">
-                            <div class="folder-icon">
-                                <div class="folder-back"></div>
-                                <div class="folder-front"></div>
-                            </div>
-                            <div class="project-name">Anna Freud</div>
-                        </div>
-                        <div class="project-folder" onclick="showProject('baro')">
-                            <div class="folder-icon">
-                                <div class="folder-back"></div>
-                                <div class="folder-front"></div>
-                            </div>
-                            <div class="project-name">Baro Behavior</div>
-                        </div>
-                        <div class="project-folder" onclick="showProject('sur')">
-                            <div class="folder-icon">
-                                <div class="folder-back"></div>
-                                <div class="folder-front"></div>
-                            </div>
-                            <div class="project-name">SUR</div>
-                        </div>
-                        <div class="project-folder" onclick="showProject('salamati')">
-                            <div class="folder-icon">
-                                <div class="folder-back"></div>
-                                <div class="folder-front"></div>
-                            </div>
-                            <div class="project-name">Salamati</div>
-                        </div>
-                    </div>
+                    <p style="font-size: 18px; color: #6e6e73; max-width: 520px;">
+                        Choose a project from the left to open its case study.
+                    </p>
                 </div>
             </div>
         </div>
@@ -1297,23 +1868,10 @@
     <!-- PROJECT DETAIL PAGE (Commonwealth Bank Example) -->
     <div id="project-commbank" class="page">
         <div class="window">
-            <div class="window-header">
-                <div class="window-dots">
-                    <div class="dot red" onclick="navigateTo('home')"></div>
-                    <div class="dot yellow"></div>
-                    <div class="dot green"></div>
-                </div>
-                <div class="nav-arrows">
-                    <div class="nav-arrow" onclick="navigateTo('work')">←</div>
-                    <div class="nav-arrow">→</div>
-                </div>
-                <div class="window-title">CommonWealth Bank</div>
-            </div>
             <div class="window-body">
                 <div class="sidebar">
                     <div class="sidebar-section">
-                        <div class="sidebar-title">Work</div>
-                        <div class="sidebar-item" onclick="navigateTo('work')">← Back to Work</div>
+                        <button class="sidebar-back" onclick="navigateTo('home')">Back</button>
                     </div>
                     <div class="sidebar-section">
                         <div class="sidebar-item active" data-section="overview" onclick="scrollToSection(event, 'overview')">Overview</div>
@@ -1326,8 +1884,9 @@
                     </div>
                 </div>
                 <div class="content-area project-content" id="project-content" data-sections="overview,research,synthesis,personas,ideation,prototype,impact">
-                    <div class="project-banner">
-                        <h1>CommonWealth Bank</h1>
+                    <p class="project-subtitle">COMMONWEALTH BANK • UX REDESIGN 2025</p>
+                    <div class="project-banner project-banner-commbank">
+                        <h1>Commonwealth Bank</h1>
                         <p>Redesigning a developer-first payments portal experience.</p>
                     </div>
                     <div class="project-meta">
@@ -1337,7 +1896,7 @@
                         </div>
                         <div class="meta-item">
                             <h3>Timeline</h3>
-                            <p>August-December 2025</p>
+                            <p>August – December 2025</p>
                         </div>
                         <div class="meta-item">
                             <h3>Team</h3>
@@ -1355,7 +1914,7 @@
                             <p>Commonwealth Bank (CommBank) is Australia's largest financial institution, serving 17M+ customers across transaction banking services.</p>
                             <p>The Payments Team's product, PaaS (Payments-as-a-Service), is a suite of APIs that makes connecting directly with CommBank's payment infrastructure seamless and cost-effective for corporate clients.</p>
                             <p>CommBank's goal is to build a developer-first PaaS platform to drive adoption in an increasingly competitive landscape. Thus, we partnered with the Payments team to explore:</p>
-                            <p><em>How might we, corporate payments, learn from developer-first platforms like Twilio, Stripe, and Snowflake?</em></p>
+                            <p class="hmw-question">How might we, corporate payments, learn from developer-first platforms like Twilio, Stripe, and Snowflake?</p>
                         </div>
                     </div>
                     
@@ -1364,27 +1923,35 @@
                         <div class="section-content">
                             <div class="subsection">
                                 <h3>Competitive Analysis</h3>
-                                <ul>
-                                    <li>We benchmarked five leading API providers to identify what defines best-in-class developer experience (DevEx)</li>
-                                    <li>Examined tools, features, and services that address common user concerns</li>
-                                </ul>
-                                <p style="margin-top: 16px; color: #6e6e73; font-size: 14px;">Competitors analyzed: Adyen, Plaid, Twilio, Stripe, and others</p>
+                                <p>We benchmarked five leading API providers to identify what defines best-in-class developer experience (DevEx). With that, we examined tools, features, and services that address common user concerns.</p>
+                                <img src="assets/images/commonwealth/COMP ANALYSIS.png" alt="Competitive analysis logos" style="width: 100%; max-width: 560px; margin-top: 20px;">
                             </div>
                             
                             <div class="subsection">
                                 <h3>User Interviews</h3>
-                                <ul>
-                                    <li>Spoke with 10+ engineers and developers from companies like Google, Oracle, and IBM</li>
-                                    <li>Identified key factors that drive platform adoption: what developers value in third-party systems, what builds trust, and where onboarding friction occurs</li>
-                                </ul>
+                                <p>We spoke with 10+ engineers and developers from companies like Google, Oracle, and IBM. From those conversations, we identified key factors that drive platform adoption: what developers value in third-party systems, what builds trust, and where onboarding friction occurs.</p>
                             </div>
                             
                             <div class="subsection">
                                 <h3>Initial Findings</h3>
-                                <p><strong>1. Documentation:</strong> Poor documentation leads to unnecessary trial-and-error during onboarding</p>
-                                <p><strong>2. Integration:</strong> APIs that plug in and test quickly are preferred; issues arise when failure points are unclear</p>
-                                <p><strong>3. Security:</strong> Strong security builds trust, though required steps can slow development</p>
-                                <p><strong>4. Customer Support:</strong> Fast, reliable responses significantly improve DevEx</p>
+                                <div class="findings-grid">
+                                    <div class="finding-item">
+                                        <span class="finding-label">Documentation</span>
+                                        <p>Poor documentation leads to unnecessary trial-and-error during onboarding</p>
+                                    </div>
+                                    <div class="finding-item">
+                                        <span class="finding-label">Integration</span>
+                                        <p>APIs that plug in and test quickly are preferred; issues arise when failure points are unclear</p>
+                                    </div>
+                                    <div class="finding-item">
+                                        <span class="finding-label">Security</span>
+                                        <p>Strong security builds trust, though required steps can slow development</p>
+                                    </div>
+                                    <div class="finding-item">
+                                        <span class="finding-label">Customer Support</span>
+                                        <p>Fast, reliable responses significantly improve DevEx</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1394,42 +1961,36 @@
                         <div class="section-content">
                             <p>We organized all our research data based on common patterns to uncover salient themes worth addressing further.</p>
                             
-                            <img src="assets/images/commonwealth/Affinity Mapping.png" style="width: 100%; border-radius: 8px; margin: 24px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" alt="Affinity Mapping">
+                            <img src="assets/images/commonwealth/Affinity Mapping.png" style="width: 100%; border-radius: 8px; margin: 24px 0;" alt="Affinity Mapping">
                             
                             <p style="margin-top: 24px;">Afterwards, we ran several rounds of iteration to develop the following key insights and focus areas:</p>
                             
                             <div class="subsection">
-                                <h3>Developers Prioritize:</h3>
-                                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 16px;">
-                                    <div style="background: #f5f5f7; padding: 20px; border-radius: 8px;">
-                                        <p style="font-size: 24px; margin-bottom: 8px;">📁</p>
-                                        <p><strong>Self-Sufficient Documentation</strong></p>
-                                        <p style="font-size: 14px; color: #6e6e73; margin-top: 8px;">Clear, comprehensive docs that answer questions without requiring support</p>
+                                <h3>Developers Prioritize</h3>
+                                <div class="findings-grid dev-prioritize-grid">
+                                    <div class="finding-item">
+                                        <span class="finding-label">Self-Sufficient Documentation</span>
+                                        <p>Clear, comprehensive docs that answer questions without requiring support</p>
                                     </div>
-                                    <div style="background: #f5f5f7; padding: 20px; border-radius: 8px;">
-                                        <p style="font-size: 24px; margin-bottom: 8px;">🔗</p>
-                                        <p><strong>External Integration Experience</strong></p>
-                                        <p style="font-size: 14px; color: #6e6e73; margin-top: 8px;">Smooth handoffs between systems with clear integration paths</p>
+                                    <div class="finding-item">
+                                        <span class="finding-label">External Integration Experience</span>
+                                        <p>Smooth handoffs between systems with clear integration paths</p>
                                     </div>
-                                    <div style="background: #f5f5f7; padding: 20px; border-radius: 8px;">
-                                        <p style="font-size: 24px; margin-bottom: 8px;">🔧</p>
-                                        <p><strong>Use Case Flexibility</strong></p>
-                                        <p style="font-size: 14px; color: #6e6e73; margin-top: 8px;">APIs that adapt to diverse implementation scenarios</p>
+                                    <div class="finding-item">
+                                        <span class="finding-label">Use Case Flexibility</span>
+                                        <p>APIs that adapt to diverse implementation scenarios</p>
                                     </div>
-                                    <div style="background: #f5f5f7; padding: 20px; border-radius: 8px;">
-                                        <p style="font-size: 24px; margin-bottom: 8px;">🔒</p>
-                                        <p><strong>Security First</strong></p>
-                                        <p style="font-size: 14px; color: #6e6e73; margin-top: 8px;">Robust security without sacrificing developer experience</p>
+                                    <div class="finding-item">
+                                        <span class="finding-label">Security First</span>
+                                        <p>Robust security without sacrificing developer experience</p>
                                     </div>
-                                    <div style="background: #f5f5f7; padding: 20px; border-radius: 8px;">
-                                        <p style="font-size: 24px; margin-bottom: 8px;">👥</p>
-                                        <p><strong>Smooth Hand-Off</strong></p>
-                                        <p style="font-size: 14px; color: #6e6e73; margin-top: 8px;">Clear transitions between discovery, implementation, and deployment</p>
+                                    <div class="finding-item">
+                                        <span class="finding-label">Smooth Hand-Off</span>
+                                        <p>Clear transitions between discovery, implementation, and deployment</p>
                                     </div>
-                                    <div style="background: #f5f5f7; padding: 20px; border-radius: 8px;">
-                                        <p style="font-size: 24px; margin-bottom: 8px;">🔔</p>
-                                        <p><strong>Building User Dependency</strong></p>
-                                        <p style="font-size: 14px; color: #6e6e73; margin-top: 8px;">Creating lasting value that keeps developers engaged</p>
+                                    <div class="finding-item">
+                                        <span class="finding-label">Building User Dependency</span>
+                                        <p>Creating lasting value that keeps developers engaged</p>
                                     </div>
                                 </div>
                             </div>
@@ -1445,17 +2006,17 @@
                             <div class="subsection">
                                 <h3>User Personas</h3>
                                 <div style="margin-top: 24px;">
-                                    <img src="assets/images/commonwealth/User Persona_ Implementer.png" style="width: 100%; border-radius: 8px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" alt="Developer Dara - The Implementer">
+                                    <img src="assets/images/commonwealth/User Persona_ Implementer.png" style="width: 100%; border-radius: 8px; margin-bottom: 24px;" alt="Developer Dara - The Implementer">
                                     
-                                    <p style="margin-top: 16px;"><strong>Developer Dara - The Implementer</strong></p>
+                                    <p class="persona-name">Developer Dara – The Implementer</p>
                                     <p>Responsible for integrating third-party APIs into the team's product. Values documentation that comes first with reliable tests and SDKs.</p>
                                     <p style="font-style: italic; color: #6e6e73;">"Documentation comes first. It's the most straightforward way to understand how an API works."</p>
                                 </div>
                                 
                                 <div style="margin-top: 40px;">
-                                    <img src="assets/images/commonwealth/User Persona_ Adopter.png" style="width: 100%; border-radius: 8px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" alt="Engineer Eli - The Adopter">
+                                    <img src="assets/images/commonwealth/User Persona_ Adopter.png" style="width: 100%; border-radius: 8px; margin-bottom: 24px;" alt="Engineer Eli - The Adopter">
                                     
-                                    <p style="margin-top: 16px;"><strong>Engineer Eli - The Adopter</strong></p>
+                                    <p class="persona-name">Engineer Eli – The Adopter</p>
                                     <p>Evaluates third-party APIs for integration and hands off implementation tasks. Values trust and reliability above all.</p>
                                     <p style="font-style: italic; color: #6e6e73;">"Trust is essential. If you can't rely on it, you won't build on it."</p>
                                 </div>
@@ -1465,9 +2026,9 @@
                                 <h3>User Journey Maps</h3>
                                 <p>We mapped the complete journey for both personas to identify pain points and opportunities.</p>
                                 
-                                <img src="assets/images/commonwealth/User Journey_ Implementer.png" style="width: 100%; border-radius: 8px; margin: 24px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" alt="Developer Dara Journey Map">
+                                <img src="assets/images/commonwealth/User Journey_ Implementer.png" style="width: 100%; border-radius: 8px; margin: 24px 0;" alt="Developer Dara Journey Map">
                                 
-                                <img src="assets/images/commonwealth/User Journey_ Adopter.png" style="width: 100%; border-radius: 8px; margin: 24px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" alt="Engineer Eli Journey Map">
+                                <img src="assets/images/commonwealth/User Journey_ Adopter.png" style="width: 100%; border-radius: 8px; margin: 24px 0;" alt="Engineer Eli Journey Map">
                             </div>
                         </div>
                     </div>
@@ -1477,29 +2038,41 @@
                         <div class="section-content">
                             <p>Based on our research synthesis, we conducted ideation sessions to explore solutions across the key focus areas:</p>
                             
-                            <img src="assets/images/commonwealth/Crazy 8s.png" style="width: 100%; border-radius: 8px; margin: 24px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" alt="Ideation - Crazy 8s">
+                            <img src="assets/images/commonwealth/Crazy 8s.png" style="width: 100%; border-radius: 8px; margin: 24px 0;" alt="Ideation - Crazy 8s">
 
                             <div class="subsection">
                                 <h3>Prioritization</h3>
                                 <p>We used a 4x4 impact–effort matrix to prioritize what to build first.</p>
-                                <img src="assets/images/commonwealth/4x4 Matrix.png" style="width: 100%; border-radius: 8px; margin: 24px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" alt="4x4 Prioritization Matrix">
+                                <img src="assets/images/commonwealth/4x4 Matrix.png" style="width: 100%; border-radius: 8px; margin: 24px 0;" alt="4x4 Prioritization Matrix">
                             </div>
                             
                             <div class="subsection">
                                 <h3>High Priority Features</h3>
-                                <ul>
-                                    <li><strong>Personalized Onboarding:</strong> A short questionnaire that creates an adaptive guide through the portal</li>
-                                    <li><strong>Interactive Testing:</strong> An embedded sandbox where developers can experiment safely</li>
-                                    <li><strong>Learning Hub:</strong> A unified dashboard for tutorials, guides, and documentation</li>
-                                    <li><strong>Notifications:</strong> A centralized hub for changes, updates, and news</li>
-                                </ul>
+                                <div class="findings-grid">
+                                    <div class="finding-item">
+                                        <span class="finding-label">Personalized Onboarding</span>
+                                        <p>A short questionnaire that creates an adaptive guide through the portal</p>
+                                    </div>
+                                    <div class="finding-item">
+                                        <span class="finding-label">Interactive Testing</span>
+                                        <p>An embedded sandbox where developers can experiment safely</p>
+                                    </div>
+                                    <div class="finding-item">
+                                        <span class="finding-label">Learning Hub</span>
+                                        <p>A unified dashboard for tutorials, guides, and documentation</p>
+                                    </div>
+                                    <div class="finding-item">
+                                        <span class="finding-label">Notifications</span>
+                                        <p>A centralized hub for changes, updates, and news</p>
+                                    </div>
+                                </div>
                             </div>
                             
                             <div class="subsection">
                                 <h3>User Flow</h3>
                                 <p>We mapped the complete user flow from landing page through onboarding to specific API implementation:</p>
                                 
-                                <img src="assets/images/commonwealth/User Flow.png" style="width: 100%; border-radius: 8px; margin: 24px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" alt="User Flow Diagram">
+                                <img src="assets/images/commonwealth/User Flow.png" style="width: 100%; border-radius: 8px; margin: 24px 0;" alt="User Flow Diagram">
                             </div>
                         </div>
                     </div>
@@ -1602,32 +2175,34 @@
                         <div class="section-content">
                             <div class="subsection">
                                 <h3>Key Takeaways</h3>
-                                <p><strong>Self-Sufficient Documentation</strong><br>
+                                <p><strong class="takeaway-label">Self-Sufficient Documentation</strong><br>
                                 Developers want clear, consistent, and complete documentation so they can understand how an API works quickly, integrate it smoothly, and focus on building features instead of debugging or seeking help.</p>
 
-                                <p><strong>Smooth Hand-Off</strong><br>
+                                <p><strong class="takeaway-label">Smooth Hand-Off</strong><br>
                                 Consistent coding styles, naming conventions, and readable patterns minimize confusion and make large, multi-team API ecosystems easier to maintain.</p>
 
-                                <p><strong>External Integration Experience</strong><br>
+                                <p><strong class="takeaway-label">External Integration Experience</strong><br>
                                 Teams often struggle to integrate external APIs because poor documentation, unclear ownership, and uncertain compatibility with business or legal needs make them difficult to trust and maintain.</p>
 
-                                <p><strong>Use Case Flexibility</strong><br>
+                                <p><strong class="takeaway-label">Use Case Flexibility</strong><br>
                                 Developers value APIs that empower innovation by adapting to their products and workflows, rather than limiting creativity through rigid structures or narrow functionality.</p>
 
-                                <p><strong>Security First</strong><br>
+                                <p><strong class="takeaway-label">Security First</strong><br>
                                 Developers seek to find trustworthy and reliable APIs that can deal with multiple tasks simultaneously while demonstrating basic security standards like authentication, encryption, and token protocols without risking security vulnerabilities.</p>
 
-                                <p><strong>Developing User Trust</strong><br>
+                                <p><strong class="takeaway-label">Developing User Trust</strong><br>
                                 Developers gain confidence in APIs that demonstrate dependable performance through consistent uptime, clear rate limits, and proactive communication about changes.</p>
                             </div>
 
                             <div class="subsection">
                                 <h3>Outcome</h3>
-                                <ul>
-                                    <li><strong>Clearer onboarding:</strong> Reduced ambiguity around “what do I do next?” through guided entry points and curated learning paths.</li>
-                                    <li><strong>Stronger trust signals:</strong> Made security, reliability, and support expectations legible earlier in the journey.</li>
-                                    <li><strong>Faster time-to-first-success:</strong> Enabled quicker testing and iteration via interactive documentation patterns.</li>
-                                </ul>
+                                <p><strong class="takeaway-label">Clearer onboarding</strong><br> Reduced ambiguity around “what do I do next?” through guided entry points and curated learning paths.</p>
+
+                                <p><strong class="takeaway-label">Stronger trust signals</strong><br>
+                                Made security, reliability, and support expectations legible earlier in the journey.</p>
+
+                                <p><strong class="takeaway-label">Faster time-to-first-success</strong><br>
+                                Enabled quicker testing and iteration via interactive documentation patterns.</p>
                             </div>
                         </div>
                     </div>
@@ -1639,23 +2214,10 @@
     <!-- PROJECT DETAIL PAGE (Anna Freud) -->
     <div id="project-annafreud" class="page">
         <div class="window">
-            <div class="window-header">
-                <div class="window-dots">
-                    <div class="dot red" onclick="navigateTo('home')"></div>
-                    <div class="dot yellow"></div>
-                    <div class="dot green"></div>
-                </div>
-                <div class="nav-arrows">
-                    <div class="nav-arrow" onclick="navigateTo('work')">←</div>
-                    <div class="nav-arrow">→</div>
-                </div>
-                <div class="window-title">Anna Freud</div>
-            </div>
             <div class="window-body">
                 <div class="sidebar">
                     <div class="sidebar-section">
-                        <div class="sidebar-title">Work</div>
-                        <div class="sidebar-item" onclick="navigateTo('work')">← Back to Work</div>
+                        <button class="sidebar-back" onclick="navigateTo('home')">Back</button>
                     </div>
                     <div class="sidebar-section">
                         <div class="sidebar-item active" data-section="af-overview" onclick="scrollToSection(event, 'af-overview')">Overview</div>
@@ -1668,7 +2230,8 @@
                     </div>
                 </div>
                 <div class="content-area project-content" id="project-content-annafreud" data-sections="af-overview,af-research,af-synthesis,af-personas,af-ideation,af-prototype,af-impact">
-                    <div class="project-banner">
+                    <p class="project-subtitle">ANNA FREUD • PROJECT 2025</p>
+                    <div class="project-banner project-banner-annafreud">
                         <h1>Anna Freud</h1>
                         <p>Designing a clearer discovery experience for mental health resources with an AI-assisted workflow.</p>
                     </div>
@@ -1684,7 +2247,7 @@
                         </div>
                         <div class="meta-item">
                             <h3>Team</h3>
-                            <p>Design team</p>
+                            <p>1 PM<br>4 Designers</p>
                         </div>
                         <div class="meta-item">
                             <h3>Skills</h3>
@@ -1695,7 +2258,7 @@
                     <div id="af-overview" class="project-section">
                         <h2 class="section-title">Overview</h2>
                         <div class="section-content">
-                            <p><strong>HMW:</strong> Provide young people and their families easier access to trusted information about mental health?</p>
+                            <p class="hmw-question">How might we provide young people and their families easier access to trusted information about mental health?</p>
                             <p>The Anna Freud Centre provides resources supporting child and family mental health. This project focused on reducing friction in discovery and helping users feel confident they’re finding trustworthy, accurate guidance.</p>
                         </div>
                     </div>
@@ -1704,43 +2267,89 @@
                         <h2 class="section-title">Research</h2>
                         <div class="section-content">
                             <div class="subsection">
-                                <h3>Methods</h3>
-                                <p>Secondary research, survey, interviews, and usability tests.</p>
-                            </div>
-
-                            <div class="subsection">
                                 <h3>Secondary Research</h3>
                                 <p>We reviewed patterns and constraints around mental health information seeking, especially trust, accuracy, and sensitive user needs. We looked at platforms like <strong>earkick</strong>, <strong>Reach RX</strong>, and <strong>Sonar</strong>.</p>
-                                <img src="assets/images/annafreud/Secondary Research.png" style="width: 100%; border-radius: 8px; margin: 16px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" alt="Secondary Research">
+                                <img src="assets/images/annafreud/Secondary Research.png" style="width: 100%; border-radius: 8px; margin: 16px 0;" alt="Secondary Research">
                             </div>
 
                             <div class="subsection">
                                 <h3>Survey</h3>
-                                <p><strong>Objective:</strong> understand barriers to accessing mental health resources.</p>
-                                <p><strong>Target demographics:</strong> ages 12–17, 18–22, 23–30, 30+.</p>
-                                <p><strong>Participants:</strong> parents, kids, and young adults.</p>
-                                <img src="assets/images/annafreud/Website Notes.png" style="width: 100%; border-radius: 8px; margin: 16px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" alt="Website Notes">
+                                <div class="findings-grid">
+                                    <div class="finding-item">
+                                        <span class="finding-label">Objective</span>
+                                        <p>Understand barriers to accessing mental health resources.</p>
+                                    </div>
+                                    <div class="finding-item">
+                                        <span class="finding-label">Target Demographics</span>
+                                        <p>Ages 12–17, 18–22, 23–30, 30+.</p>
+                                    </div>
+                                    <div class="finding-item">
+                                        <span class="finding-label">Participants</span>
+                                        <p>Parents, kids, and young adults.</p>
+                                    </div>
+                                </div>
+                                <img src="assets/images/annafreud/Website Notes.png" style="width: 100%; border-radius: 8px; margin: 16px 0;" alt="Website Notes">
                             </div>
 
                             <div class="subsection">
                                 <h3>Interviews</h3>
-                                <p><strong>Methods:</strong> survey respondents who opted in for an interview.</p>
-                                <p><strong>Platform:</strong> Zoom.</p>
-                                <p><strong>Testing process:</strong> 15–20 minute interviews.</p>
-                                <p><strong>Procedure:</strong> participants were given background context, then prompted to answer a set of qualitative questions.</p>
-                                <p><strong>Themes we focused on:</strong> parent confidence + addressing support needs, trust & perception of AI, and barriers to accessing mental health resources.</p>
-                                <p><strong>Interview goals:</strong> understand pain points in current experiences, identify indicators of trust and accessibility, and assess perception of AI in health care.</p>
+                                <div class="findings-grid">
+                                    <div class="finding-item">
+                                        <span class="finding-label">Methods</span>
+                                        <p>Survey respondents who opted in for an interview.</p>
+                                    </div>
+                                    <div class="finding-item">
+                                        <span class="finding-label">Testing Process</span>
+                                        <p>15–20 minute interviews.</p>
+                                    </div>
+                                    <div class="finding-item">
+                                        <span class="finding-label">Procedure</span>
+                                        <p>Participants were given background context, then prompted to answer a set of qualitative questions.</p>
+                                    </div>
+                                    <div class="finding-item">
+                                        <span class="finding-label">Themes We Focused On</span>
+                                        <p>Parent confidence + addressing support needs, trust & perception of AI, and barriers to accessing mental health resources.</p>
+                                    </div>
+                                    <div class="finding-item">
+                                        <span class="finding-label">Interview Goals</span>
+                                        <p>Understand pain points in current experiences, identify indicators of trust and accessibility, and assess perception of AI in health care.</p>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="subsection">
                                 <h3>Usability Tests</h3>
-                                <p><strong>Goals:</strong> evaluate effectiveness of resource design, understand navigational preferences, and analyze usage habits.</p>
-                                <p><strong>Method:</strong> prompt interviewees to answer a standardized set of questions to understand design and navigation flow preferences.</p>
-                                <p><strong>Tested on:</strong> resources suggested by survey responses.</p>
-                                <p><strong>Testing process duration:</strong> 10–15 minutes.</p>
-                                <p><strong>Before testing:</strong> a small set of questions to understand usage habits of familiar resources.</p>
-                                <p><strong>During testing:</strong> while screen-sharing, users walk through and answer questions for a new resource.</p>
-                                <p><strong>Post-testing:</strong> questions about the experience of navigating the new resource.</p>
+                                <div class="findings-grid">
+                                    <div class="finding-item">
+                                        <span class="finding-label">Goals</span>
+                                        <p>Evaluate effectiveness of resource design, understand navigational preferences, and analyze usage habits.</p>
+                                    </div>
+                                    <div class="finding-item">
+                                        <span class="finding-label">Method</span>
+                                        <p>Prompt interviewees to answer a standardized set of questions to understand design and navigation flow preferences.</p>
+                                    </div>
+                                    <div class="finding-item">
+                                        <span class="finding-label">Tested On</span>
+                                        <p>Resources suggested by survey responses.</p>
+                                    </div>
+                                </div>
+                                <div class="usability-timeline">
+                                    <p class="timeline-duration"><span class="finding-label">Testing Duration</span> 10–15 minutes</p>
+                                    <div class="timeline-steps">
+                                        <div class="timeline-step">
+                                            <span class="finding-label">Before Testing</span>
+                                            <p>A small set of questions to understand usage habits of familiar resources.</p>
+                                        </div>
+                                        <div class="timeline-step">
+                                            <span class="finding-label">During Testing</span>
+                                            <p>While screen-sharing, users walk through and answer questions for a new resource.</p>
+                                        </div>
+                                        <div class="timeline-step">
+                                            <span class="finding-label">Post Testing</span>
+                                            <p>Questions about the experience of navigating the new resource.</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1749,12 +2358,12 @@
                         <h2 class="section-title">Synthesis</h2>
                         <div class="section-content">
                             <p>We worked to understand users through <strong>affinity mapping</strong>, connecting themes across clusters to identify the strongest signals.</p>
-                            <img src="assets/images/annafreud/Affinity Mapping.png" style="width: 100%; border-radius: 8px; margin: 16px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" alt="Affinity Mapping">
+                            <img src="assets/images/annafreud/Affinity Mapping.png" style="width: 100%; border-radius: 8px; margin: 16px 0;" alt="Affinity Mapping">
 
                             <div class="subsection">
                                 <h3>Key Insights</h3>
                                 <p>Across the research, three things mattered most: <strong>personalized</strong> guidance, <strong>trustworthy</strong> sources, and <strong>accurate</strong> information.</p>
-                                <img src="assets/images/annafreud/Empathy Mapping.png" style="width: 100%; border-radius: 8px; margin: 16px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" alt="Empathy Mapping">
+                                <img src="assets/images/annafreud/Empathy Mapping.png" style="width: 100%; border-radius: 8px; margin: 16px 0;" alt="Empathy Mapping">
 
                                 <div class="insights-grid">
                                     <div class="insight-card">
@@ -1791,12 +2400,12 @@
                                     </div>
                                 </div>
 
-                                <img src="assets/images/annafreud/Insight Statements .png" style="width: 100%; border-radius: 8px; margin: 16px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" alt="Insight statements">
+                                <img src="assets/images/annafreud/Insight Statements .png" style="width: 100%; border-radius: 8px; margin: 16px 0;" alt="Insight statements">
                             </div>
 
                             <div class="subsection">
                                 <h3>Interview Insights</h3>
-                                <p><strong>Key points identified:</strong> fragmented experience, systemic barriers, what works, and receptiveness to AI.</p>
+                                <p>The key points we identified were: fragmented experience, systemic barriers, what works, and receptiveness to AI.</p>
                             </div>
                         </div>
                     </div>
@@ -1805,8 +2414,8 @@
                         <h2 class="section-title">Personas</h2>
                         <div class="section-content">
                             <p>We captured two core personas, <strong>Karly</strong> and <strong>James</strong>, representing different levels of familiarity and support needs.</p>
-                            <img src="assets/images/annafreud/User Persona - Inexperienced.png" style="width: 100%; border-radius: 8px; margin: 16px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" alt="User Persona - Inexperienced">
-                            <img src="assets/images/annafreud/User Persona - Experienced.png" style="width: 100%; border-radius: 8px; margin: 16px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" alt="User Persona - Experienced">
+                            <img src="assets/images/annafreud/User Persona - Inexperienced.png" style="width: 100%; border-radius: 8px; margin: 16px 0;" alt="User Persona - Inexperienced">
+                            <img src="assets/images/annafreud/User Persona - Experienced.png" style="width: 100%; border-radius: 8px; margin: 16px 0;" alt="User Persona - Experienced">
                         </div>
                     </div>
 
@@ -1879,11 +2488,17 @@
                     <div id="af-impact" class="project-section">
                         <h2 class="section-title">Impact</h2>
                         <div class="section-content">
-                            <ul>
-                                <li><strong>Lowered the barrier to discovery:</strong> multiple entry points for “I don’t know what to search”.</li>
-                                <li><strong>Increased repeatability:</strong> collections + save flows support returning users.</li>
-                                <li><strong>Maintained trust:</strong> content remains grounded in curated resources rather than open-ended answers.</li>
-                            </ul>
+                            <div class="findings-grid">
+                                <div class="finding-item"><span class="finding-label">Lowered the barrier to discovery</span><p>Multiple entry points for “I don’t know what to search”.</p></div>
+                                <div class="finding-item">
+                                    <span class="finding-label">Increased repeatability</span>
+                                    <p>Collections + save flows support returning users.</p>
+                                </div>
+                                <div class="finding-item">
+                                    <span class="finding-label">Maintained trust</span>
+                                    <p>Content remains grounded in curated resources rather than open-ended answers.</p>
+                                </div>
+                            </div>
 
                         </div>
                     </div>
@@ -1896,6 +2511,36 @@
         let currentPage = 'home';
         let history = ['home'];
         
+        // Create custom cursor dot
+        (function setupCustomCursor() {
+            const dot = document.createElement('div');
+            dot.className = 'cursor-dot';
+            document.body.appendChild(dot);
+
+            const hoverSelector = 'a, button, .nav-link, .nav-icon-link, .gallery-card, .sidebar-item, .sidebar-back, .photo-stack';
+
+            window.addEventListener('pointermove', (e) => {
+                dot.style.left = `${e.clientX}px`;
+                dot.style.top = `${e.clientY}px`;
+            }, { passive: true });
+
+            document.addEventListener('pointerover', (e) => {
+                const target = e.target;
+                if (!(target instanceof Element)) return;
+                if (target.closest(hoverSelector)) {
+                    dot.classList.add('is-hovering');
+                }
+            });
+
+            document.addEventListener('pointerout', (e) => {
+                const target = e.target;
+                if (!(target instanceof Element)) return;
+                if (target.closest(hoverSelector)) {
+                    dot.classList.remove('is-hovering');
+                }
+            });
+        })();
+
         function navigateTo(pageId) {
             // Hide current page
             document.getElementById(currentPage).classList.remove('active');
@@ -1908,11 +2553,84 @@
             currentPage = pageId;
             
             // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'auto' });
             const contentArea = document.querySelector(`#${pageId} .content-area`);
             if (contentArea) {
                 contentArea.scrollTop = 0;
             }
+
+            // Reset hero scales when returning to home so the type isn't stuck mid-animation
+            if (pageId === 'home') {
+                const hero = document.getElementById('homeHero');
+                if (hero) {
+                    hero.style.setProperty('--homeNameScale', '1');
+                    hero.style.setProperty('--homeDetailsScale', '0.9');
+                    hero.style.setProperty('--homeNameY', '0px');
+                }
+            }
+
+            // Only allow the window itself to scroll on the landing page; for inner pages,
+            // scrolling happens inside their own content areas so we avoid double-scroll glitches.
+            const isHome = pageId === 'home';
+            const isProject = pageId.startsWith('project-');
+
+            document.body.style.overflowY = isHome ? 'auto' : 'hidden';
+            document.body.classList.toggle('no-global-header', isProject);
+
+            const nav = document.querySelector('.site-nav');
+            if (nav) {
+                nav.style.display = isProject ? 'none' : '';
+            }
         }
+
+        // Home gallery is now accessed by scrolling.
+
+        // Landing hero scroll type (spread over ~800px for smoother motion)
+        (function setupLandingHeroScrollType() {
+            const hero = document.getElementById('homeHero');
+            if (!hero) return;
+
+            const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (reducedMotion) {
+                hero.style.setProperty('--homeNameScale', '1');
+                hero.style.setProperty('--homeDetailsScale', '1.1');
+                hero.style.setProperty('--homeNameY', '0px');
+                return;
+            }
+
+            const clamp01 = (v) => Math.max(0, Math.min(1, v));
+            const lerp = (a, b, t) => a + (b - a) * t;
+            const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+
+            let raf = 0;
+
+            function update() {
+                raf = 0;
+                const activeHome = document.getElementById('home')?.classList.contains('active');
+                if (!activeHome) return;
+
+                const heroTop = hero.getBoundingClientRect().top + window.scrollY;
+                const tRaw = clamp01((window.scrollY - heroTop) / 800);
+                const t = easeOutCubic(tRaw);
+
+                const nameScale = lerp(1, 0.42, t);
+                const detailsScale = lerp(0.9, 1.32, t);
+                const nameY = lerp(0, -18, t);
+
+                hero.style.setProperty('--homeNameScale', String(nameScale));
+                hero.style.setProperty('--homeDetailsScale', String(detailsScale));
+                hero.style.setProperty('--homeNameY', `${nameY}px`);
+            }
+
+            function onScroll() {
+                if (raf) return;
+                raf = window.requestAnimationFrame(update);
+            }
+
+            window.addEventListener('scroll', onScroll, { passive: true });
+            window.addEventListener('resize', onScroll);
+            update();
+        })();
         
         function showProject(projectId) {
             const projectPage = `project-${projectId}`;
@@ -1924,6 +2642,42 @@
                 alert('Project page coming soon!');
             }
         }
+
+        // Make gallery cards keyboard accessible (Enter/Space triggers click)
+        document.addEventListener('keydown', (e) => {
+            const target = e.target;
+            if (!(target instanceof HTMLElement)) return;
+            if (!target.classList.contains('gallery-card')) return;
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                target.click();
+            }
+        });
+
+        // Optional: auto-play gallery videos on hover (desktop)
+        (function setupGalleryVideoHover() {
+            const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (prefersReduced) return;
+
+            document.querySelectorAll('.gallery-card.has-video video').forEach((vid) => {
+                const card = vid.closest('.gallery-card');
+                if (!card) return;
+
+                vid.muted = true;
+                vid.loop = true;
+                vid.playsInline = true;
+                vid.preload = 'metadata';
+
+                card.addEventListener('pointerenter', () => {
+                    // best effort; browsers may still block in some cases
+                    vid.play().catch(() => {});
+                });
+                card.addEventListener('pointerleave', () => {
+                    vid.pause();
+                    try { vid.currentTime = 0; } catch {}
+                });
+            });
+        })();
         
         function setActiveSidebar(pageEl, sectionId) {
             if (!pageEl) return;
