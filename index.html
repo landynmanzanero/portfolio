@@ -2564,7 +2564,6 @@
 
     <script>
         let currentPage = 'home';
-        let history = ['home'];
 
         const PAGE_TITLES = {
             'home': 'Landy Manzanero',
@@ -2611,25 +2610,18 @@
             });
         })();
 
-        function navigateTo(pageId) {
-            // Hide current page
+        function showPage(pageId) {
+            const pageEl = document.getElementById(pageId);
+            if (!pageEl) return;
+
             document.getElementById(currentPage).classList.remove('active');
-            
-            // Show new page
-            document.getElementById(pageId).classList.add('active');
-            
-            // Update history
-            history.push(pageId);
+            pageEl.classList.add('active');
             currentPage = pageId;
-            
-            // Scroll to top
+
             window.scrollTo({ top: 0, behavior: 'auto' });
             const contentArea = document.querySelector(`#${pageId} .content-area`);
-            if (contentArea) {
-                contentArea.scrollTop = 0;
-            }
+            if (contentArea) contentArea.scrollTop = 0;
 
-            // Reset hero scales when returning to home so the type isn't stuck mid-animation
             if (pageId === 'home') {
                 const hero = document.getElementById('homeHero');
                 if (hero) {
@@ -2639,18 +2631,18 @@
                 }
             }
 
-            // Only allow the window itself to scroll on the landing page; for inner pages,
-            // scrolling happens inside their own content areas so we avoid double-scroll glitches.
             const isHome = pageId === 'home';
             const isProject = pageId.startsWith('project-');
-
             document.body.style.overflowY = isHome ? 'auto' : 'hidden';
             document.body.classList.toggle('no-global-header', isProject);
-
             const nav = document.querySelector('.site-nav');
-            if (nav) {
-                nav.style.display = isProject ? 'none' : '';
-            }
+            if (nav) nav.style.display = isProject ? 'none' : '';
+            updatePageTitle(pageId);
+        }
+
+        function navigateTo(pageId) {
+            showPage(pageId);
+            history.pushState({ pageId: pageId }, '', '#' + pageId);
         }
 
         // Home gallery is now accessed by scrolling.
@@ -2910,17 +2902,24 @@
             fillInitial();
         })();
 
-        // Handle browser back button
+        // Browser back/forward: sync UI with history state
         window.addEventListener('popstate', function(e) {
-            if (history.length > 1) {
-                history.pop();
-                const previousPage = history[history.length - 1];
-                document.getElementById(currentPage).classList.remove('active');
-                document.getElementById(previousPage).classList.add('active');
-                currentPage = previousPage;
-                updatePageTitle(previousPage);
-            }
+            const state = e.state;
+            const hash = window.location.hash.slice(1);
+            const validPages = ['home', 'about', 'work', 'project-commbank', 'project-annafreud', 'project-baro', 'project-sur', 'project-salamati'];
+            let pageId = state && state.pageId ? state.pageId : (validPages.includes(hash) ? hash : 'home');
+            showPage(pageId);
         });
+
+        // Initial load: set history state and handle deep links (#about, #project-commbank, etc.)
+        (function initHistory() {
+            const hash = window.location.hash.slice(1);
+            const validPages = ['home', 'about', 'work', 'project-commbank', 'project-annafreud', 'project-baro', 'project-sur', 'project-salamati'];
+            const initialPage = validPages.includes(hash) ? hash : 'home';
+
+            if (initialPage !== 'home') showPage(initialPage);
+            history.replaceState({ pageId: initialPage }, '', '#' + initialPage);
+        })();
     </script>
 </body>
 </html>
