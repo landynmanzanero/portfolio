@@ -1001,6 +1001,37 @@
             display: none;
         }
 
+        .project-banner-baro {
+            border-radius: 0;
+            overflow: hidden;
+            background: linear-gradient(90deg, #9BC9DC 0%, #B5DCED 50%, #CEEAF4 100%);
+            padding: 48px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 160px;
+        }
+
+        .project-banner-baro h1 {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 6px;
+        }
+
+        .project-banner-baro p {
+            color: rgba(29,29,31,0.85);
+            font-size: 15px;
+            margin-bottom: 0;
+        }
+
+        .project-banner-baro > div {
+            text-align: center;
+        }
+
         .project-subtitle {
             font-family: 'IBM Plex Mono', ui-monospace, monospace;
             font-size: 11px;
@@ -1033,6 +1064,12 @@
         }
 
         /* CommBank theme */
+        #project-commbank .content-area img {
+            max-width: 72%;
+            height: auto;
+            display: block;
+        }
+
         #project-annafreud .section-title {
             color: var(--af-navy);
             position: relative;
@@ -1890,7 +1927,7 @@
                 <div class="home-gallery-grid">
                     <div class="gallery-card" role="button" tabindex="0" onclick="showProject('commbank')">
                         <div class="gallery-media">
-                            <img src="assets/images/commonwealth/Start.png" alt="CommonWealth Bank project preview">
+                            <img src="assets/images/commonwealth/CommBank Cover.png" alt="CommonWealth Bank project preview">
                         </div>
                         <div class="gallery-overlay"></div>
                         <div class="gallery-meta">
@@ -1900,7 +1937,7 @@
 
                     <div class="gallery-card" role="button" tabindex="0" onclick="showProject('annafreud')">
                         <div class="gallery-media">
-                            <img src="assets/images/annafreud/AskAnnaAI Home.png" alt="Anna Freud project preview">
+                            <img src="assets/images/annafreud/AnnaFreudCover.png" alt="Anna Freud project preview">
                         </div>
                         <div class="gallery-overlay"></div>
                         <div class="gallery-meta">
@@ -1908,8 +1945,10 @@
                         </div>
                     </div>
 
-                    <div class="gallery-card" role="button" tabindex="0" onclick="alert('Add Baro Behavior project page next')">
-                        <div class="gallery-media"></div>
+                    <div class="gallery-card" role="button" tabindex="0" onclick="showProject('baro')">
+                        <div class="gallery-media">
+                            <img src="assets/images/baro/BaroBehavior Cover.png" alt="Baro Behavior project preview">
+                        </div>
                         <div class="gallery-overlay"></div>
                         <div class="gallery-meta">
                             <div class="gallery-title">Baro Behavior</div>
@@ -2666,6 +2705,139 @@
                                 </div>
                             </div>
 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROJECT DETAIL PAGE (Baro Behavior) -->
+    <div id="project-baro" class="page">
+        <div class="window">
+            <div class="window-body">
+                <div class="sidebar">
+                    <div class="sidebar-section">
+                        <button class="sidebar-back" onclick="navigateTo('home')">Back</button>
+                    </div>
+                    <div class="sidebar-section">
+                        <div class="sidebar-item active" data-section="baro-overview" onclick="scrollToSection(event, 'baro-overview')">Overview</div>
+                        <div class="sidebar-item" data-section="baro-learnings" onclick="scrollToSection(event, 'baro-learnings')">Tech Stack</div>
+                        <div class="sidebar-item" data-section="baro-scope" onclick="scrollToSection(event, 'baro-scope')">Scope</div>
+                        <div class="sidebar-item" data-section="baro-architecture" onclick="scrollToSection(event, 'baro-architecture')">Architecture</div>
+                        <div class="sidebar-item" data-section="baro-learned" onclick="scrollToSection(event, 'baro-learned')">What I Learned</div>
+                    </div>
+                </div>
+                <div class="content-area project-content" id="project-content-baro" data-sections="baro-overview,baro-learnings,baro-scope,baro-architecture,baro-learned">
+                    <p class="project-subtitle">BARO • BEHAVIOR INTERVENTION PLATFORM</p>
+                    <div class="project-banner project-banner-baro">
+                        <div>
+                            <h1>BARO</h1>
+                        </div>
+                    </div>
+                    <div class="project-meta">
+                        <div class="meta-item">
+                            <h3>Role</h3>
+                            <p>Engineering Lead / Full-Stack Developer</p>
+                        </div>
+                        <div class="meta-item">
+                            <h3>Timeline</h3>
+                            <p>October 2025 – December 2025</p>
+                        </div>
+                        <div class="meta-item">
+                            <h3>Team</h3>
+                            <p>6 engineers (led & mentored)</p>
+                        </div>
+                        <div class="meta-item">
+                            <h3>Skills</h3>
+                            <p>Full-Stack · Auth · Supabase · Leadership</p>
+                        </div>
+                    </div>
+                    <p style="margin-bottom: 24px;">I led development of a user-centered web platform that helps teachers onboard students, structure intervention workflows, and securely manage behavior-support data.</p>
+
+                    <div id="baro-overview" class="project-section">
+                        <h2 class="section-title">Overview</h2>
+                        <div class="section-content">
+                            <p>BARO is a web platform designed to support K–12 educators with evidence-based behavior interventions for individual students. The product separates teacher and student experiences, enables secure access, and creates a structured onboarding flow to collect student info and map behavioral needs into a decision-tree foundation for intervention recommendations.</p>
+                        </div>
+                    </div>
+
+                    <div id="baro-learnings" class="project-section">
+                        <h2 class="section-title">Tech Stack</h2>
+                        <div class="section-content">
+                            <div class="about-toolkit-pills">
+                                <span class="about-toolkit-pill">React</span>
+                                <span class="about-toolkit-pill">TypeScript</span>
+                                <span class="about-toolkit-pill">JavaScript</span>
+                                <span class="about-toolkit-pill">Supabase</span>
+                                <span class="about-toolkit-pill">PostgreSQL</span>
+                                <span class="about-toolkit-pill">Google OAuth</span>
+                                <span class="about-toolkit-pill">GitHub</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="baro-scope" class="project-section">
+                        <h2 class="section-title">What I Built (Scope)</h2>
+                        <div class="section-content">
+                            <p>My implementation covered Milestone 1, Milestone 2, and partial Milestone 3.</p>
+                            <div class="subsection">
+                                <h3>Milestone 1 — Teacher + Student Account Creation and Login</h3>
+                                <p><strong>Delivered:</strong></p>
+                                <ul style="margin: 8px 0 0 1.2em; line-height: 1.7;">
+                                    <li>Teacher account creation and login (email/password and Google OAuth)</li>
+                                    <li>Secure authentication flows</li>
+                                    <li>Student login mechanism using unique codes generated after teacher setup</li>
+                                    <li>Foundation for adding a student to a class using a class code</li>
+                                </ul>
+                            </div>
+                            <div class="subsection">
+                                <h3>Milestone 2 — Teacher + Student Dashboard Structure</h3>
+                                <p><strong>Delivered:</strong></p>
+                                <ul style="margin: 8px 0 0 1.2em; line-height: 1.7;">
+                                    <li>Teacher and student dashboard foundations</li>
+                                    <li>Sidebar navigation structure with major sections and tabs</li>
+                                    <li>Base routing for role-based dashboards (Teacher lands on Prep with student cards; Student sees welcome message and lands on Prep)</li>
+                                </ul>
+                            </div>
+                            <div class="subsection">
+                                <h3>Milestone 3 (Partial) — Teacher Prep Tab Pages</h3>
+                                <p><strong>Contributed:</strong></p>
+                                <ul style="margin: 8px 0 0 1.2em; line-height: 1.7;">
+                                    <li>Backend/data foundations to support teacher-led student onboarding steps</li>
+                                    <li>Early integration points for behavior categorization and behavior prioritization workflow</li>
+                                    <li>Data modeling considerations for storing behavior-tree selections</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="baro-architecture" class="project-section">
+                        <h2 class="section-title">Architecture (High-Level)</h2>
+                        <div class="section-content">
+                            <div class="subsection">
+                                <h3>Frontend</h3>
+                                <p>Web application with role-based routing and dashboard experiences.</p>
+                            </div>
+                            <div class="subsection">
+                                <h3>Backend</h3>
+                                <p>Supabase (PostgreSQL) used for teacher login information, student login codes, and behavior tree data storage.</p>
+                            </div>
+                            <div class="subsection">
+                                <h3>Authentication</h3>
+                                <p>Google OAuth for teacher login; secure session handling; role-based access control patterns.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="baro-learned" class="project-section">
+                        <h2 class="section-title">What I Learned</h2>
+                        <div class="section-content">
+                            <ul style="margin: 0 0 0 1.2em; line-height: 1.7;">
+                                <li>Building authentication and data modeling early determines the reliability of the entire product</li>
+                                <li>Technical leadership is as much about clarity and systems as it is about shipping code</li>
+                                <li>Translating domain logic (behavior interventions) into structured data requires tight iteration with stakeholders</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
