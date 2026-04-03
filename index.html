@@ -40,7 +40,6 @@
         html, body,
         a, button,
         .nav-link,
-        .nav-icon-link,
         .gallery-card,
         .sidebar-item,
         .sidebar-back,
@@ -126,6 +125,11 @@
             font-weight: 400;
         }
 
+        .nav-left {
+            flex-wrap: wrap;
+            row-gap: 6px;
+        }
+
         .nav-logo {
             font-family: 'DM Sans', -apple-system, sans-serif;
             font-size: 16px;
@@ -156,27 +160,6 @@
             border: none;
         }
 
-        .nav-icon-link {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 26px;
-            height: 26px;
-            border-radius: 999px;
-            border: 1px solid rgba(0,0,0,0.16);
-            font-size: 11px;
-            transition: background 200ms ease, border-color 200ms ease, transform 180ms ease;
-            color: #1d1d1f;
-            text-decoration: none;
-        }
-
-        .nav-icon-link svg {
-            width: 15px;
-            height: 15px;
-            display: block;
-            fill: currentColor;
-        }
-
         .site-nav a.nav-link:link,
         .site-nav a.nav-link:visited {
             text-decoration: none;
@@ -189,13 +172,6 @@
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-        }
-
-        .nav-icon-link:hover,
-        .nav-icon-link:focus-visible {
-            background: rgba(0,0,0,0.06);
-            border-color: rgba(0,0,0,0.32);
-            transform: translateY(-1px);
         }
 
         @media (max-width: 900px) {
@@ -2072,7 +2048,6 @@
             html, body,
             a, button,
             .nav-link,
-            .nav-icon-link,
             .gallery-card,
             .sidebar-item,
             .sidebar-back,
@@ -2157,36 +2132,13 @@
 <body>
     <header class="site-nav">
         <div class="nav-left">
-            <a class="nav-logo" href="./" onclick="event.preventDefault(); navigateTo('home'); window.scrollTo({ top: 0, behavior: 'auto' });">Landy Manzanero</a>
-        </div>
-        <div class="nav-right">
             <a class="nav-link" href="./" onclick="event.preventDefault(); goToWorkGallery();">work</a>
             <a class="nav-link" href="about" onclick="event.preventDefault(); navigateTo('about');">about</a>
-            <a class="nav-link" href="assets/Landy_Manzanero_Resume.pdf" target="_blank">resume</a>
-            <a class="nav-icon-link" href="https://www.linkedin.com/in/landynmanzanero/"
-               target="_blank" rel="noopener" aria-label="LinkedIn">
-                <svg viewBox="0 0 24 24" aria-hidden="true"
-                     style="width:15px;height:15px;display:block;fill:currentColor;">
-                    <rect x="3" y="3" width="18" height="18" rx="2" fill="none"
-                          stroke="currentColor" stroke-width="1.4"></rect>
-                    <rect x="7" y="10" width="2" height="7" fill="currentColor"></rect>
-                    <circle cx="8" cy="7" r="1.2" fill="currentColor"></circle>
-                    <path d="M12.5 10h1.9v1c.4-.7 1.1-1.2 2.1-1.2 1.6 0 2.7 1
-                             2.7 3.1v3.9h-2.1v-3.5c0-1-.3-1.6-1.1-1.6-.9 0-1.3.7
-                             -1.3 1.7v3.4h-2.2z" fill="currentColor"></path>
-                </svg>
-            </a>
-            <a class="nav-icon-link" href="mailto:landynmanzanero@berkeley.edu"
-               aria-label="Email">
-                <svg viewBox="0 0 24 24" aria-hidden="true"
-                     style="width:15px;height:15px;display:block;fill:currentColor;">
-                    <rect x="3" y="5" width="18" height="14" rx="2" fill="none"
-                          stroke="currentColor" stroke-width="1.4"></rect>
-                    <polyline points="5,7 12,12 19,7" fill="none"
-                              stroke="currentColor" stroke-width="1.4"
-                              stroke-linecap="round" stroke-linejoin="round"></polyline>
-                </svg>
-            </a>
+            <a class="nav-link" href="https://www.linkedin.com/in/landynmanzanero/" target="_blank" rel="noopener">linkedin</a>
+            <a class="nav-link" href="mailto:landynmanzanero@berkeley.edu">email</a>
+        </div>
+        <div class="nav-right">
+            <a class="nav-logo" href="./" onclick="event.preventDefault(); navigateTo('home'); window.scrollTo({ top: 0, behavior: 'auto' });">Landy Manzanero</a>
         </div>
     </header>
     <!-- HOME PAGE -->
@@ -2433,7 +2385,7 @@
             dot.className = 'cursor-dot';
             document.body.appendChild(dot);
 
-            const hoverSelector = 'a, button, .nav-link, .nav-icon-link, .gallery-card, .sidebar-item, .sidebar-back, .photo-stack, .home-cursive, .home-name-char';
+            const hoverSelector = 'a, button, .nav-link, .gallery-card, .sidebar-item, .sidebar-back, .photo-stack, .home-cursive, .home-name-char';
 
             window.addEventListener('pointermove', (e) => {
                 dot.style.left = `${e.clientX}px`;
