@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landy Manzanero, Baro Behavior</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Baskervville:ital@0;1&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    img { box-shadow: none !important; filter: none; outline: 0; border: 0; }
+    @keyframes pageFadeIn { from { opacity: 0; } to { opacity: 1; } }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+        background: #ffffff; color: #1d1d1f;
+        overflow: hidden; padding-top: 0; cursor: none;
+        animation: pageFadeIn 0.4s ease both;
+    }
+    html, body, a, button, .sidebar-item, .sidebar-back { cursor: none !important; }
+    .cursor-dot {
+        position: fixed; left: 0; top: 0; width: 20px; height: 20px;
+        border-radius: 50%; background: #F3D98F;
+        transform: translate(-50%, -50%); pointer-events: none; z-index: 9999;
+        opacity: 1; transition: opacity 0.15s ease-out, transform 0.12s ease-out;
+    }
+    .cursor-dot.is-hovering { opacity: 0.4; transform: translate(-50%, -50%) scale(0.9); }
+    .site-nav {
+        position: fixed; top: 0; left: 0; right: 0;
+        z-index: 1000; height: 60px;
+        display: flex; align-items: center;
+        padding: 0 60px;
+        background: rgba(255,255,255,0.96);
+        backdrop-filter: blur(14px);
+        justify-content: space-between;
+        transition: transform 0.3s ease;
+    }
+    .site-nav.hidden { transform: translateY(-100%); }
+    .nav-left { display: flex; align-items: center; }
+    .nav-logo {
+        font-family: 'DM Sans', -apple-system, sans-serif;
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        color: #1d1d1f;
+        text-decoration: none;
+        text-transform: none;
+    }
+    .nav-right { display: flex; align-items: center; gap: 22px; font-size: 16px; font-weight: 400; }
+    .nav-link {
+        font-family: 'DM Sans', -apple-system, sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        color: #6e6e73;
+        background: none;
+        border: none;
+        text-decoration: none;
+        cursor: pointer;
+        transition: color 0.2s ease;
+        text-transform: lowercase;
+    }
+
+    .site-nav .nav-link:hover,
+    .site-nav .nav-link:focus-visible {
+        background: linear-gradient(90deg, #E36887, #EA7A55, #F3D98F);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .nav-icon-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        border-radius: 999px;
+        border: 1px solid rgba(0,0,0,0.16);
+        color: #1d1d1f;
+        text-decoration: none;
+        transition: background 200ms ease, border-color 200ms ease;
+    }
+    .nav-icon-link:hover,
+    .nav-icon-link:focus-visible {
+        background: rgba(0,0,0,0.06);
+        border-color: rgba(0,0,0,0.32);
+    }
+    .nav-icon-link svg {
+        width: 15px;
+        height: 15px;
+        display: block;
+        fill: currentColor;
+    }
+
+    .window-body { display: flex; height: calc(100vh - 60px); margin-top: 60px; overflow: hidden; }
+    .sidebar { width: 280px; background: transparent; padding: 28px 0; }
+    .sidebar-section { margin-bottom: 24px; }
+    .sidebar-item {
+        padding: 10px 24px; font-size: 17px; color: #8e8e93; cursor: pointer;
+        font-family: 'Inter', -apple-system, sans-serif;
+        transition: background 0.15s, color 0.15s;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: relative;
+    }
+    .sidebar-item:hover { background: rgba(0,0,0,0.03); color: #1d1d1f; }
+    .sidebar-item.active { background: transparent; color: #1d1d1f; font-weight: 600; }
+    .sidebar-back {
+        display: inline-flex; align-items: center; gap: 6px;
+        margin: 0 24px 24px; font-family: inherit; font-size: 16px; font-weight: 400;
+        padding: 0; border: none; background: transparent; color: #8e8e93;
+        cursor: pointer; text-transform: lowercase;
+        transition: color 0.25s ease, background 0.25s ease;
+    }
+    .sidebar-back::before { content: '← '; font-size: inherit; }
+    .sidebar-back:hover, .sidebar-back:focus-visible {
+        background: linear-gradient(90deg, #E36887, #EA7A55, #F3D98F);
+        -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .content-area { flex: 1; overflow-y: auto; padding: 40px 60px; }
+    .content-area.project-content { padding: 40px 48px 60px 48px; }
+    .content-area::-webkit-scrollbar { width: 10px; }
+    .content-area::-webkit-scrollbar-track { background: transparent; }
+    .content-area::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 10px; }
+    .content-area::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.3); }
+    .project-subtitle { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500; color: #8e8e93; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 12px; }
+    .project-banner {
+        border-radius: 0; overflow: hidden; padding: 48px 40px; margin-bottom: 32px;
+        border: none; box-shadow: none; background: #ffffff;
+        display: flex; align-items: center; justify-content: center; min-height: 160px;
+    }
+    .project-banner-baro { background: linear-gradient(90deg, #9BC9DC 0%, #B5DCED 50%, #CEEAF4 100%); }
+    .project-banner-baro h1 { font-family: 'Inter', sans-serif; font-size: 32px; font-weight: 700; color: #ffffff; text-transform: uppercase; letter-spacing: 0.04em; }
+    .project-meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; margin-bottom: 48px; }
+    .meta-item h3 { font-size: 11px; font-weight: 500; color: #6e6e73; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; font-family: 'IBM Plex Mono', monospace; }
+    .meta-item p { font-size: 14px; font-weight: 400; color: #8e8e93; line-height: 1.5; }
+    .project-section { margin-bottom: 56px; }
+    .section-title { font-size: 14px; font-weight: 400; color: #8e8e93; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.08em; font-family: 'IBM Plex Mono', monospace; }
+    .section-content { font-size: 15px; line-height: 1.8; color: #8e8e93; font-family: 'Inter', -apple-system, sans-serif; }
+    .section-content p { margin-bottom: 16px; }
+    .section-content strong { color: #1d1d1f; font-weight: 600; }
+    .subsection { margin-top: 32px; }
+    .subsection h3 { font-size: 20px; font-weight: 600; color: #1d1d1f; margin-bottom: 12px; font-family: 'Baskervville', Georgia, serif; }
+    .takeaway-block { margin-top: 36px; border-top: 1px solid rgba(0,0,0,0.06); padding-top: 32px; }
+    .takeaway-item { padding: 20px 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+    .takeaway-label { font-family: 'Baskervville', Georgia, serif; font-size: 19px; font-weight: 600; color: #1d1d1f; display: block; margin-bottom: 8px; }
+    .takeaway-item p { font-size: 15px; color: #8e8e93; margin-bottom: 0; line-height: 1.7; }
+    .tech-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+    .tech-pill {
+        display: inline-flex; align-items: center;
+        background: #ffffff; border: 1px solid #000000; border-radius: 999px;
+        padding: 7px 14px; font-size: 13px; font-weight: 500; color: #1d1d1f;
+        font-family: 'IBM Plex Mono', monospace;
+    }
+    .case-img { width: 100%; height: auto; display: block; border-radius: 10px; margin: 28px 0 8px; border: 1px solid rgba(0,0,0,0.08); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .case-img-caption { font-size: 13px; color: #6e6e73; margin: 0 0 28px; text-align: center; }
+
+    .case-img-browser {
+        width: 100%;
+        border-radius: 10px;
+        border: 1px solid rgba(0,0,0,0.1);
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        margin: 28px 0 8px;
+    }
+    .case-img-browser-bar {
+        background: #f5f5f7;
+        border-bottom: 1px solid rgba(0,0,0,0.08);
+        padding: 8px 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .case-img-browser-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+    }
+    .case-img-browser-url {
+        flex: 1;
+        margin: 0 10px;
+        background: rgba(0,0,0,0.06);
+        border-radius: 4px;
+        height: 18px;
+    }
+    .case-img-browser img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+        margin: 0;
+    }
+    .milestone-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 28px; }
+    .milestone-card { padding: 24px; background: rgba(245,245,247,0.6); border-radius: 12px; }
+    .milestone-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; color: #8e8e93; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 10px; }
+    .milestone-title { font-family: 'Baskervville', Georgia, serif; font-size: 18px; font-weight: 600; color: #1d1d1f; display: block; margin-bottom: 8px; }
+    .milestone-card p { font-size: 13px; color: #8e8e93; line-height: 1.55; margin-bottom: 0; }
+    @media (max-width: 768px) {
+        .site-nav { padding: 0 20px; height: 56px; }
+        .nav-right { gap: 14px; font-size: 13px; }
+        .cursor-dot { display: none !important; }
+        html, body, a, button, .sidebar-item, .sidebar-back { cursor: auto !important; }
+        .sidebar { display: none; }
+        .content-area { padding: 24px 20px; }
+        .project-meta { grid-template-columns: repeat(2, 1fr); }
+        .milestone-grid { grid-template-columns: 1fr; }
+    }
+
+    .fade-up {
+        opacity: 0;
+        transform: translateY(24px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .fade-up {
+            opacity: 1;
+            transform: none;
+            transition: none;
+        }
+    }
+    </style>
+</head>
+<body>
+<nav class="site-nav">
+  <div class="nav-left">
+    <a class="nav-logo" href="index.html">Landy Manzanero</a>
+  </div>
+  <div class="nav-right">
+    <a class="nav-link" href="index.html#homeGallery">work</a>
+    <a class="nav-link" href="index.html#about">about</a>
+    <a class="nav-link" href="assets/Landy_Manzanero_Resume.pdf" target="_blank">resume</a>
+    <a class="nav-icon-link" href="https://www.linkedin.com/in/landynmanzanero/" target="_blank" rel="noopener" aria-label="LinkedIn">
+      <svg viewBox="0 0 24 24" aria-hidden="true" style="width:15px;height:15px;display:block;fill:currentColor;">
+        <rect x="3" y="3" width="18" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"></rect>
+        <rect x="7" y="10" width="2" height="7" fill="currentColor"></rect>
+        <circle cx="8" cy="7" r="1.2" fill="currentColor"></circle>
+        <path d="M12.5 10h1.9v1c.4-.7 1.1-1.2 2.1-1.2 1.6 0 2.7 1 2.7 3.1v3.9h-2.1v-3.5c0-1-.3-1.6-1.1-1.6-.9 0-1.3.7-1.3 1.7v3.4h-2.2z" fill="currentColor"></path>
+      </svg>
+    </a>
+    <a class="nav-icon-link" href="mailto:landynmanzanero@berkeley.edu" aria-label="Email">
+      <svg viewBox="0 0 24 24" aria-hidden="true" style="width:15px;height:15px;display:block;fill:currentColor;">
+        <rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"></rect>
+        <polyline points="5,7 12,12 19,7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></polyline>
+      </svg>
+    </a>
+  </div>
+</nav>
+<div class="window-body">
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <button class="sidebar-back" onclick="goBack()">Back</button>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-item active" data-section="baro-overview" onclick="scrollToSection('baro-overview')">Overview</div>
+                <div class="sidebar-item" data-section="baro-brief" onclick="scrollToSection('baro-brief')">The Brief</div>
+                <div class="sidebar-item" data-section="baro-built" onclick="scrollToSection('baro-built')">What I Built</div>
+                <div class="sidebar-item" data-section="baro-leading" onclick="scrollToSection('baro-leading')">Leading</div>
+                <div class="sidebar-item" data-section="baro-learned" onclick="scrollToSection('baro-learned')">Learnings</div>
+            </div>
+        </div>
+
+        <div class="content-area project-content">
+            <div class="project-subtitle">Full Stack Development &#183; Technical Leadership &#183; EdTech</div>
+            <div class="project-banner project-banner-baro"><h1>Baro Behavior</h1></div>
+            <div class="project-meta">
+                <div class="meta-item"><h3>My Role</h3><p>Engineering Lead / Full Stack Developer</p></div>
+                <div class="meta-item"><h3>Timeframe</h3><p>October &#8211; December 2025</p></div>
+                <div class="meta-item"><h3>Team</h3><p>6 Engineers</p></div>
+                <div class="meta-item"><h3>Stack</h3><p>React, TypeScript, Supabase, PostgreSQL, Google OAuth</p></div>
+            </div>
+
+<div id="baro-overview" class="project-section">
+  <h2 class="section-title">Overview</h2>
+  <div class="section-content">
+    <p>Baro is a web platform helping K-12 teachers implement evidence-based behavior interventions for individual students. I led a six-person engineering team through authentication, role-based dashboards, and the early intervention onboarding flow.</p>
+    <p>This is not a design case study. But it&#8217;s where I learned that design decisions don&#8217;t wait for designers.</p>
+    <div class="milestone-grid">
+      <div class="milestone-card">
+        <span class="milestone-label">Milestone 1</span>
+        <span class="milestone-title">Authentication</span>
+        <p>Teacher accounts with email/password and Google OAuth. Student login via teacher-generated codes. Data collection layer for onboarding.</p>
+      </div>
+      <div class="milestone-card">
+        <span class="milestone-label">Milestone 2</span>
+        <span class="milestone-title">Role-Based Dashboards</span>
+        <p>Two entirely separate dashboard experiences. Teachers see their students. Students land on a personalized welcome screen before entering their own view.</p>
+      </div>
+      <div class="milestone-card">
+        <span class="milestone-label">Milestone 3 (Partial)</span>
+        <span class="milestone-title">Intervention Onboarding</span>
+        <p>Reduced screen count, scroll-based flow, save progress. Data modeling for the behavior categorization system that determines reinforcement schedules.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="baro-brief" class="project-section">
+  <h2 class="section-title">The Brief</h2>
+  <div class="section-content">
+    <p>The client came in with two artifacts: a behavioral science spec document and a set of Figma files. The problem was they didn&#8217;t consistently agree. Screens were redundant, flows required unnecessary clicks, and the onboarding sequence was broken into far more steps than the logic actually required.</p>
+    <p>Before we could build, someone had to decide which version of the product we were building. That role fell to me.</p>
+    <div class="case-img-browser">
+        <div class="case-img-browser-bar">
+            <div class="case-img-browser-dot" style="background:#ff5f57;"></div>
+            <div class="case-img-browser-dot" style="background:#F3D98F;"></div>
+            <div class="case-img-browser-dot" style="background:#28c840;"></div>
+            <div class="case-img-browser-url"></div>
+        </div>
+        <img src="assets/images/baro/BaroBehaviorCover.png" alt="Baro Behavior platform">
+    </div>
+  </div>
+</div>
+
+<div id="baro-built" class="project-section">
+  <h2 class="section-title">What I Built</h2>
+  <div class="section-content">
+    <div class="subsection">
+      <h3>Milestone 1, Authentication</h3>
+      <p>I built teacher account creation and login with email and password plus Google OAuth, secure session handling, and the student login mechanism using a unique code generated on the teacher side. I also built the data collection layer for teacher onboarding, capturing grade levels, teaching position, years of experience, and three self-rating scales that would later feed into intervention recommendations.</p>
+    </div>
+    <div class="subsection">
+      <h3>Milestone 2, Role-Based Dashboards</h3>
+      <p>Two entirely separate dashboard experiences: teachers land on a Prep view showing their student cards, students land on a personalized welcome screen. The routing logic required clarity on one design question first: what is the most important thing each user needs to see in the first three seconds? For teachers, it&#8217;s their students. For students, it&#8217;s acknowledgment that this space is theirs.</p>
+    </div>
+    <div class="subsection">
+      <h3>Milestone 3, Intervention Onboarding</h3>
+      <p>The client&#8217;s Figma showed a long click-next sequence, one question per screen, with a &#8220;Next&#8221; button to advance. We restructured it as a scroll-based flow and added a save progress button. The reasoning was simple: teachers are interrupted constantly. An onboarding flow that loses progress when a teacher gets pulled away is a flow that never gets completed. The save button wasn&#8217;t in the spec. It came from thinking about the actual context of use.</p>
+    </div>
+  </div>
+</div>
+
+<div id="baro-leading" class="project-section">
+  <h2 class="section-title">What Leading Looked Like</h2>
+  <div class="section-content">
+    <p>Six engineers building together without clear design direction produces six different products. My role was to prevent that.</p>
+    <p>In practice that meant facilitating working sessions where the team could surface design questions before they became code problems. That process slowed down individual work slightly and made the final product significantly more coherent. It also meant the team started asking better questions of the client.</p>
+  </div>
+</div>
+
+<div id="baro-learned" class="project-section">
+  <h2 class="section-title">Learnings</h2>
+  <div class="section-content">
+    <div class="takeaway-block">
+      <div class="takeaway-item">
+        <span class="takeaway-label">Authentication and data modeling are design decisions.</span>
+        <p>The structure you choose for your database determines what the product can do later. Technical choices have design implications, whether or not a designer is in the room.</p>
+      </div>
+      <div class="takeaway-item">
+        <span class="takeaway-label">Specs and Figma files are starting points, not answers.</span>
+        <p>The client&#8217;s deliverables described what they wanted the product to do. They didn&#8217;t describe what it would feel like to use it. That gap is where design lives.</p>
+      </div>
+      <div class="takeaway-item">
+        <span class="takeaway-label">Technical leadership is a communication problem.</span>
+        <p>The engineering decisions I&#8217;m most proud of on this project came out of conversations, not solo problem-solving. Getting six people to build one coherent thing requires a shared understanding of what that thing is for. That&#8217;s a design skill applied to a team.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+        </div><!-- end content-area -->
+    </div><!-- end window-body -->
+<script>
+function goBack() {
+    document.body.style.transition = 'opacity 0.3s ease';
+    document.body.style.opacity = '0';
+    setTimeout(function() { window.location.href = 'index.html'; }, 300);
+}
+function setActiveSidebar(sectionId) {
+    document.querySelectorAll('.sidebar-item[data-section]').forEach(function(item) {
+        item.classList.toggle('active', item.getAttribute('data-section') === sectionId);
+    });
+}
+function scrollToSection(sectionId) {
+    var section = document.getElementById(sectionId);
+    var ca = document.querySelector('.content-area.project-content');
+    if (section && ca) {
+        ca.scrollTo({ top: section.offsetTop - 40, behavior: 'smooth' });
+        setActiveSidebar(sectionId);
+    }
+}
+(function setupScrollSync() {
+    var ca = document.querySelector('.content-area.project-content');
+    if (!ca) return;
+    var sections = Array.from(document.querySelectorAll('.project-section[id]'));
+    ca.addEventListener('scroll', function() {
+        var scrollTop = ca.scrollTop;
+        var active = sections[0];
+        sections.forEach(function(s) { if (s.offsetTop - 80 <= scrollTop) active = s; });
+        if (active) setActiveSidebar(active.id);
+    }, { passive: true });
+})();
+(function setupCursor() {
+    var dot = document.createElement('div');
+    dot.className = 'cursor-dot';
+    document.body.appendChild(dot);
+    document.addEventListener('pointermove', function(e) {
+        dot.style.left = e.clientX + 'px';
+        dot.style.top = e.clientY + 'px';
+    });
+    var sel = 'a, button, .sidebar-item, .sidebar-back';
+    document.addEventListener('pointerover', function(e) {
+        if (e.target instanceof Element && e.target.closest(sel)) dot.classList.add('is-hovering');
+    });
+    document.addEventListener('pointerout', function(e) {
+        if (e.target instanceof Element && e.target.closest(sel)) dot.classList.remove('is-hovering');
+    });
+})();
+(function setupNavHide() {
+    var nav = document.querySelector('.site-nav');
+    var ca = document.querySelector('.content-area.project-content');
+    if (!nav || !ca) return;
+    var lastScroll = 0;
+    ca.addEventListener('scroll', function() {
+        var current = ca.scrollTop;
+        if (current > lastScroll && current > 60) {
+            nav.classList.add('hidden');
+        } else {
+            nav.classList.remove('hidden');
+        }
+        lastScroll = current;
+    }, { passive: true });
+})();
+(function setupFadeIn() {
+    var scrollRoot = document.querySelector('.content-area.project-content');
+    if (!scrollRoot) return;
+    var els = scrollRoot.querySelectorAll(
+        '.project-subtitle, .project-section, .case-img, .case-img-browser, ' +
+        '.case-img-row, .findings-grid, .finding-item, ' +
+        '.interview-quote, .research-table, .subsection, ' +
+        '.stat-row, .numbered-insights, .milestone-grid, ' +
+        '.takeaway-block, .project-meta, .project-banner'
+    );
+    els.forEach(function(el) {
+        el.classList.add('fade-up');
+    });
+    if (!('IntersectionObserver' in window)) {
+        els.forEach(function(el) { el.classList.add('is-visible'); });
+        return;
+    }
+    var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { root: scrollRoot, threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function(el) { observer.observe(el); });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landy Manzanero, Commonwealth Bank</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Baskervville:ital@0;1&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    img { box-shadow: none !important; filter: none; outline: 0; border: 0; }
+
+    @keyframes pageFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+        background: #ffffff; color: #1d1d1f;
+        overflow: hidden; padding-top: 0; cursor: none;
+        animation: pageFadeIn 0.4s ease both;
+    }
+
+    html, body, a, button, .sidebar-item, .sidebar-back,
+    .sidebar-item { cursor: none !important; }
+
+    .cursor-dot {
+        position: fixed; left: 0; top: 0; width: 20px; height: 20px;
+        border-radius: 50%; background: #F3D98F;
+        transform: translate(-50%, -50%); pointer-events: none; z-index: 9999;
+        opacity: 1; transition: opacity 0.15s ease-out, transform 0.12s ease-out;
+    }
+    .cursor-dot.is-hovering { opacity: 0.4; transform: translate(-50%, -50%) scale(0.9); }
+
+    :root {
+        --af-navy: #232b55; --af-lilac: #5856d6;
+        --af-pink: #f2a7c6; --af-mint: #9fe2d0; --cb-blue: #007aff;
+    }
+
+    .site-nav {
+        position: fixed; top: 0; left: 0; right: 0;
+        z-index: 1000; height: 60px;
+        display: flex; align-items: center;
+        padding: 0 60px;
+        background: rgba(255,255,255,0.96);
+        backdrop-filter: blur(14px);
+        justify-content: space-between;
+        transition: transform 0.3s ease;
+    }
+    .site-nav.hidden { transform: translateY(-100%); }
+    .nav-left { display: flex; align-items: center; }
+    .nav-logo {
+        font-family: 'DM Sans', -apple-system, sans-serif;
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        color: #1d1d1f;
+        text-decoration: none;
+        text-transform: none;
+    }
+    .nav-right { display: flex; align-items: center; gap: 22px; font-size: 16px; font-weight: 400; }
+    .nav-link {
+        font-family: 'DM Sans', -apple-system, sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        color: #6e6e73;
+        background: none;
+        border: none;
+        text-decoration: none;
+        cursor: pointer;
+        transition: color 0.2s ease;
+        text-transform: lowercase;
+    }
+
+    .site-nav .nav-link:hover,
+    .site-nav .nav-link:focus-visible {
+        background: linear-gradient(90deg, #E36887, #EA7A55, #F3D98F);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .nav-icon-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        border-radius: 999px;
+        border: 1px solid rgba(0,0,0,0.16);
+        color: #1d1d1f;
+        text-decoration: none;
+        transition: background 200ms ease, border-color 200ms ease;
+    }
+    .nav-icon-link:hover,
+    .nav-icon-link:focus-visible {
+        background: rgba(0,0,0,0.06);
+        border-color: rgba(0,0,0,0.32);
+    }
+    .nav-icon-link svg {
+        width: 15px;
+        height: 15px;
+        display: block;
+        fill: currentColor;
+    }
+
+    .window-body { display: flex; height: calc(100vh - 60px); margin-top: 60px; overflow: hidden; }
+
+    .sidebar { width: 280px; background: transparent; padding: 28px 0; }
+    .sidebar-section { margin-bottom: 24px; }
+    .sidebar-item {
+        padding: 10px 24px; font-size: 17px; color: #8e8e93; cursor: pointer;
+        font-family: 'Inter', -apple-system, sans-serif;
+        transition: background 0.15s, color 0.15s;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: relative;
+    }
+    .sidebar-item:hover { background: rgba(0,0,0,0.03); color: #1d1d1f; }
+    .sidebar-item.active { background: transparent; color: #1d1d1f; font-weight: 600; }
+
+    .sidebar-back {
+        display: inline-flex; align-items: center; gap: 6px;
+        margin: 0 24px 24px; font-family: inherit; font-size: 16px; font-weight: 400;
+        padding: 0; border: none; background: transparent; color: #8e8e93;
+        cursor: pointer; text-transform: lowercase;
+        transition: color 0.25s ease, background 0.25s ease;
+    }
+    .sidebar-back::before { content: '← '; font-size: inherit; }
+    .sidebar-back:hover, .sidebar-back:focus-visible {
+        background: linear-gradient(90deg, #E36887, #EA7A55, #F3D98F);
+        -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+
+    .content-area { flex: 1; overflow-y: auto; padding: 40px 60px; }
+    .content-area.project-content { padding: 40px 48px 60px 48px; }
+    .content-area::-webkit-scrollbar { width: 10px; }
+    .content-area::-webkit-scrollbar-track { background: transparent; }
+    .content-area::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 10px; }
+    .content-area::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.3); }
+
+    .project-subtitle {
+        font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500;
+        color: #8e8e93; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 12px;
+    }
+    .project-banner {
+        border-radius: 0; overflow: hidden; padding: 48px 40px; margin-bottom: 32px;
+        border: none; box-shadow: none; background: #ffffff;
+        display: flex; align-items: center; justify-content: center; min-height: 140px;
+    }
+    .project-banner h1 { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
+    .project-banner p { color: #6e6e73; font-size: 15px; margin-bottom: 0; }
+
+    .project-banner-commbank {
+        background: linear-gradient(90deg, #f5d93d 0%, #ffed7a 50%, #fff9c4 100%); min-height: 160px;
+    }
+    .project-banner-commbank h1 {
+        font-family: 'Inter', sans-serif; font-size: 32px; font-weight: 700;
+        color: #ffffff; text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .project-banner-commbank p { display: none; }
+
+    .project-banner-annafreud {
+        background: linear-gradient(90deg, #f2a7c6 0%, #c9a8e8 50%, #9fe2d0 100%);
+    }
+    .project-banner-annafreud h1 {
+        color: #ffffff; font-family: 'Inter', sans-serif; font-size: 28px;
+        font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .project-banner-annafreud p { display: none; }
+
+    .project-banner-baro {
+        background: linear-gradient(90deg, #9BC9DC 0%, #B5DCED 50%, #CEEAF4 100%); min-height: 160px;
+    }
+    .project-banner-baro h1 {
+        font-family: 'Inter', sans-serif; font-size: 32px; font-weight: 700;
+        color: #ffffff; text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .project-banner-baro p { display: none; }
+
+    .project-meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; margin-bottom: 48px; }
+    .meta-item h3 {
+        font-size: 11px; font-weight: 500; color: #6e6e73;
+        text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;
+        font-family: 'IBM Plex Mono', monospace;
+    }
+    .meta-item p { font-size: 14px; font-weight: 400; color: #8e8e93; line-height: 1.5; }
+
+    .project-section { margin-bottom: 56px; }
+    .section-title {
+        font-size: 14px; font-weight: 400; color: #8e8e93; margin-bottom: 16px;
+        text-transform: uppercase; letter-spacing: 0.08em; font-family: 'IBM Plex Mono', monospace;
+    }
+    .section-content { font-size: 15px; line-height: 1.8; color: #8e8e93; font-family: 'Inter', -apple-system, sans-serif; }
+    .section-content p { margin-bottom: 16px; }
+    .section-content em { font-style: italic; color: #6e6e73; font-weight: 400; }
+    .section-content ul { list-style: none; padding-left: 0; }
+    .section-content li { padding-left: 24px; position: relative; margin-bottom: 12px; }
+    .section-content li:before { content: "\2022"; position: absolute; left: 8px; color: #6e6e73; }
+
+    .subsection { margin-top: 32px; }
+    .subsection h3 {
+        font-size: 20px; font-weight: 600; color: #1d1d1f; margin-bottom: 12px;
+        font-family: 'Baskervville', Georgia, serif;
+    }
+
+    .findings-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px 40px; margin-top: 20px; }
+    .finding-item { padding: 0; background: transparent; }
+    .finding-label {
+        font-family: 'Baskervville', Georgia, serif !important;
+        font-size: 18px; font-weight: 600; color: #1d1d1f; display: block; margin-bottom: 8px;
+    }
+    .finding-item p { font-size: 14px; color: #6e6e73; margin-bottom: 0; line-height: 1.5; }
+    .takeaway-label {
+        font-family: 'Baskervville', Georgia, serif !important;
+        font-size: 18px; font-weight: 600; color: #1d1d1f;
+    }
+    .dev-prioritize-grid { grid-template-columns: repeat(3, 1fr); }
+
+    .hmw-question {
+        font-family: 'Baskervville', Georgia, serif;
+        font-size: 22px; font-weight: 600; color: #1d1d1f; line-height: 1.4; margin: 16px 0 24px;
+    }
+    .sprint-led-note { font-size: 13px; line-height: 1.55; margin: 0 0 16px; color: #8e8e93; }
+    .sprint-led-note em { font-style: italic; font-weight: 400; color: #8e8e93; }
+
+    .case-img { width: 100%; height: auto; display: block; border-radius: 10px; margin: 28px 0 8px; border: 1px solid rgba(0,0,0,0.08); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .case-img.team-photo { width: 80%; max-width: 80%; margin-left: auto; margin-right: auto; }
+    .case-img-caption { font-size: 13px; color: #6e6e73; margin: 0 0 28px; text-align: center; }
+    .case-img-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0 8px; }
+    .case-img-row img { width: 100%; height: auto; display: block; border-radius: 10px; border: 1px solid rgba(0,0,0,0.08); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+
+    .case-img-browser {
+        width: 100%;
+        border-radius: 10px;
+        border: 1px solid rgba(0,0,0,0.1);
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        margin: 28px 0 8px;
+    }
+    .case-img-browser-bar {
+        background: #f5f5f7;
+        border-bottom: 1px solid rgba(0,0,0,0.08);
+        padding: 8px 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .case-img-browser-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+    }
+    .case-img-browser-url {
+        flex: 1;
+        margin: 0 10px;
+        background: rgba(0,0,0,0.06);
+        border-radius: 4px;
+        height: 18px;
+    }
+    .case-img-browser img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+        margin: 0;
+    }
+    .case-img-row .case-img-browser { margin: 0; }
+
+    .insights-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; margin-top: 16px; }
+    .insight-card {
+        background: rgba(245,245,247,0.85); border: 1px solid rgba(0,0,0,0.06);
+        border-radius: 12px; padding: 14px;
+    }
+    .insight-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+    .insight-card p { font-size: 13px; line-height: 1.55; color: #1d1d1f; margin-bottom: 0; }
+
+    .about-toolkit-pills { display: flex; flex-wrap: wrap; gap: 10px; }
+    .about-toolkit-pill {
+        display: inline-flex; align-items: center;
+        background: #ffffff; border: 1px solid #000000; border-radius: 999px;
+        padding: 10px 16px; font-size: 14px; font-weight: 500; color: #1d1d1f;
+    }
+
+    .usability-timeline { margin-top: 28px; position: relative; }
+    .usability-timeline .timeline-duration { font-size: 14px; color: #8e8e93; margin-bottom: 20px; }
+    .usability-timeline .timeline-steps {
+        display: flex; flex-direction: column; position: relative; padding-left: 28px;
+    }
+    .usability-timeline .timeline-steps::before {
+        content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-radius: 2px;
+        background: linear-gradient(180deg, #f2a7c6 0%, #c9a8e8 50%, #9fe2d0 100%);
+    }
+    .usability-timeline .timeline-step { padding: 20px 0; position: relative; }
+    .usability-timeline .timeline-step:not(:last-child) { border-bottom: 1px solid rgba(0,0,0,0.06); }
+    .usability-timeline .timeline-step .finding-label { display: block; margin-bottom: 6px; }
+    .usability-timeline .timeline-step p { font-size: 14px; line-height: 1.55; color: #8e8e93; margin-bottom: 0; }
+
+    .interview-quote {
+        border-left: 3px solid rgba(0,0,0,0.1); padding: 14px 20px; margin: 20px 0;
+        font-style: italic; color: #6e6e73; font-size: 15px; line-height: 1.7;
+    }
+    .interview-source {
+        font-style: normal; font-size: 11px; color: #8e8e93; margin-top: 8px;
+        font-family: 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: 0.08em;
+    }
+
+    .interview-card-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin: 24px 0;
+    }
+    .interview-card {
+        padding: 18px 20px;
+        border: none;
+        border-left: 3px solid rgba(0,0,0,0.18);
+        border-radius: 0;
+        background: transparent;
+    }
+    .interview-card-theme {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 11px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #8e8e93;
+        margin-bottom: 10px;
+        display: block;
+    }
+    .interview-card-quote {
+        font-style: italic;
+        color: #6e6e73;
+        font-size: 14px;
+        line-height: 1.65;
+        margin: 0 0 10px;
+    }
+    .interview-card-source {
+        font-size: 11px;
+        color: #8e8e93;
+        font-family: 'IBM Plex Mono', monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        display: block;
+    }
+
+    .user-flow-path {
+        font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #1d1d1f;
+        line-height: 1.8; margin: 12px 0 16px; padding: 16px 20px;
+        background: rgba(245,245,247,0.6); border-radius: 8px;
+    }
+
+    .comp-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .comp-list li {
+        padding: 10px 0 10px 16px;
+        border-left: 3px solid rgba(0,0,0,0.08);
+        font-size: 14px;
+        color: #6e6e73;
+        line-height: 1.5;
+        margin-bottom: 8px;
+    }
+    .section-content .comp-list li::before {
+        content: none;
+        display: none;
+    }
+    .comp-list.strengths li {
+        border-left-color: #28c840;
+    }
+    .comp-list.weaknesses li {
+        border-left-color: #ff5f57;
+    }
+    .comp-col-label {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 11px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #8e8e93;
+        margin-bottom: 12px;
+        display: block;
+    }
+    .comp-two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+        margin-top: 24px;
+    }
+
+    .persona-hover-wrap {
+        position: relative;
+        border-radius: 10px;
+        overflow: hidden;
+        cursor: default;
+    }
+    .persona-hover-wrap img {
+        width: 100%;
+        height: auto;
+        display: block;
+        transition: filter 0.35s ease;
+        border-radius: 10px;
+    }
+    .persona-hover-wrap:hover img {
+        filter: brightness(0.35);
+    }
+    .persona-hover-text {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        opacity: 0;
+        transition: opacity 0.35s ease;
+        text-align: center;
+    }
+    .persona-hover-wrap:hover .persona-hover-text {
+        opacity: 1;
+    }
+    .persona-hover-text p {
+        font-size: 16px;
+        font-weight: 500;
+        color: #ffffff;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    .insight-toggle-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-top: 20px;
+    }
+    .insight-toggle-item {
+        padding: 20px;
+        border: 1px solid rgba(0,0,0,0.08);
+        border-radius: 10px;
+        cursor: default;
+        min-height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.25s ease;
+        position: relative;
+    }
+    .insight-toggle-item:hover {
+        background: rgba(245,245,247,0.8);
+    }
+    .insight-toggle-title {
+        font-family: 'Baskervville', Georgia, serif;
+        font-size: 17px;
+        font-weight: 600;
+        color: #1d1d1f;
+        text-align: center;
+        transition: opacity 0.2s ease;
+    }
+    .insight-toggle-desc {
+        font-size: 13px;
+        color: #6e6e73;
+        line-height: 1.55;
+        text-align: center;
+        opacity: 0;
+        position: absolute;
+        inset: 0;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.2s ease;
+    }
+    .insight-toggle-item:hover .insight-toggle-title {
+        opacity: 0;
+    }
+    .insight-toggle-item:hover .insight-toggle-desc {
+        opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+        .site-nav { padding: 0 20px; height: 56px; }
+        .nav-right { gap: 14px; font-size: 13px; }
+        .cursor-dot { display: none !important; }
+        html, body, a, button, .sidebar-item, .sidebar-back { cursor: auto !important; }
+        .sidebar { display: none; }
+        .content-area { padding: 24px 20px; }
+        .project-meta { grid-template-columns: repeat(2, 1fr); }
+        .findings-grid { grid-template-columns: repeat(2, 1fr); }
+        .dev-prioritize-grid { grid-template-columns: repeat(2, 1fr); }
+        .insights-grid { grid-template-columns: 1fr; }
+        .comp-two-col { grid-template-columns: 1fr; gap: 24px; }
+        .persona-hover-wrap img {
+            filter: none !important;
+        }
+        .persona-hover-text {
+            opacity: 1 !important;
+            position: static;
+            padding: 12px 0 0;
+        }
+        .persona-hover-text p {
+            color: #6e6e73;
+            font-size: 14px;
+        }
+        .insight-toggle-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .insight-toggle-title {
+            opacity: 1 !important;
+        }
+        .insight-toggle-desc {
+            opacity: 1 !important;
+            position: static;
+            margin-top: 8px;
+        }
+        .insight-toggle-item {
+            flex-direction: column;
+            align-items: flex-start;
+            min-height: auto;
+        }
+    }
+
+    .fade-up {
+        opacity: 0;
+        transform: translateY(24px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .fade-up {
+            opacity: 1;
+            transform: none;
+            transition: none;
+        }
+    }
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <div class="nav-left">
+    <a class="nav-logo" href="index.html">Landy Manzanero</a>
+  </div>
+  <div class="nav-right">
+    <a class="nav-link" href="index.html#homeGallery">work</a>
+    <a class="nav-link" href="index.html#about">about</a>
+    <a class="nav-link" href="assets/Landy_Manzanero_Resume.pdf" target="_blank">resume</a>
+    <a class="nav-icon-link" href="https://www.linkedin.com/in/landynmanzanero/" target="_blank" rel="noopener" aria-label="LinkedIn">
+      <svg viewBox="0 0 24 24" aria-hidden="true" style="width:15px;height:15px;display:block;fill:currentColor;">
+        <rect x="3" y="3" width="18" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"></rect>
+        <rect x="7" y="10" width="2" height="7" fill="currentColor"></rect>
+        <circle cx="8" cy="7" r="1.2" fill="currentColor"></circle>
+        <path d="M12.5 10h1.9v1c.4-.7 1.1-1.2 2.1-1.2 1.6 0 2.7 1 2.7 3.1v3.9h-2.1v-3.5c0-1-.3-1.6-1.1-1.6-.9 0-1.3.7-1.3 1.7v3.4h-2.2z" fill="currentColor"></path>
+      </svg>
+    </a>
+    <a class="nav-icon-link" href="mailto:landynmanzanero@berkeley.edu" aria-label="Email">
+      <svg viewBox="0 0 24 24" aria-hidden="true" style="width:15px;height:15px;display:block;fill:currentColor;">
+        <rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"></rect>
+        <polyline points="5,7 12,12 19,7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></polyline>
+      </svg>
+    </a>
+  </div>
+</nav>
+        <div class="window-body">
+            <div class="sidebar">
+                <div class="sidebar-section">
+                    <button class="sidebar-back" onclick="goBack()">Back</button>
+                </div>
+                <div class="sidebar-section"><div class="sidebar-item active" data-section="cb-overview" onclick="scrollToSection('cb-overview')">Overview</div><div class="sidebar-item" data-section="cb-myrole" onclick="scrollToSection('cb-myrole')">My Role</div><div class="sidebar-item" data-section="cb-research" onclick="scrollToSection('cb-research')">Research</div><div class="sidebar-item" data-section="cb-synthesis" onclick="scrollToSection('cb-synthesis')">Synthesis</div><div class="sidebar-item" data-section="cb-ideation" onclick="scrollToSection('cb-ideation')">Ideation</div><div class="sidebar-item" data-section="cb-prototype" onclick="scrollToSection('cb-prototype')">Prototype</div><div class="sidebar-item" data-section="cb-impact" onclick="scrollToSection('cb-impact')">Impact</div><div class="sidebar-item" data-section="cb-reflect" onclick="scrollToSection('cb-reflect')">Reflections</div></div>
+            </div>
+            <div class="content-area project-content" data-sections="cb-overview,cb-myrole,cb-research,cb-synthesis,cb-ideation,cb-prototype,cb-impact,cb-reflect">
+<p class="project-subtitle">COMMONWEALTH BANK &middot; UX RESEARCH &middot; PRODUCT DESIGN &middot; 2025</p>
+<div class="project-banner project-banner-commbank"><h1>Commonwealth Bank</h1></div>
+<div class="project-meta">
+  <div class="meta-item"><h3>My Role</h3><p>Product Designer</p></div>
+  <div class="meta-item"><h3>Timeline</h3><p>August &ndash; December 2025</p></div>
+  <div class="meta-item"><h3>Team</h3><p>1 PM<br>4 Designers</p></div>
+  <div class="meta-item"><h3>Skills</h3><p>User Research<br>Product Strategy<br>Prototyping</p></div>
+</div>
+
+<!-- OVERVIEW -->
+<div id="cb-overview" class="project-section">
+  <h2 class="section-title">Overview</h2>
+  <div class="section-content">
+    <p>CommBank&rsquo;s developer portal had one problem: it dropped developers at the door with nothing but a link to documentation. No onboarding, no direction, no sense of where to start. We partnered with the Payments team to figure out what a genuinely developer-first portal could look like.</p>
+    <p class="hmw-question">How might corporate payments learn from developer-first platforms like Twilio, Stripe, and Snowflake?</p>
+  </div>
+</div>
+
+<!-- MY ROLE -->
+<div id="cb-myrole" class="project-section">
+  <h2 class="section-title">My Role</h2>
+  <div class="section-content">
+    <p>As the only team member with an engineering background, I took on a lead role in translating a technically complex domain for the team. The team came from different backgrounds, so the first sprint was about building shared context before we could design for it.</p>
+    <p>I led Sprint 1 (Research) end-to-end: defining our research approach, recruiting participants, and conducting the majority of our interviews with senior software engineers. After an independent lo-fi round, the team aligned on a direction and collaborated to develop it into the high-fidelity prototype.</p>
+  </div>
+</div>
+
+<!-- RESEARCH -->
+<div id="cb-research" class="project-section">
+  <h2 class="section-title">Research</h2>
+  <div class="section-content">
+    <p class="sprint-led-note"><em>This is the sprint I led.</em></p>
+    <p>We benchmarked five platforms and talked to 10 engineers to understand what great developer experience actually looks like, and more importantly, what keeps getting in the way of it.</p>
+    <div class="stat-row" style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin:24px 0;">
+      <div class="stat-item" style="text-align:left;padding:20px 24px;background:rgba(245,245,247,0.6);border-radius:10px;">
+        <span class="stat-num" style="font-family:'Baskervville',Georgia,serif;font-size:36px;font-weight:600;color:#1d1d1f;display:block;margin-bottom:4px;">5</span>
+        <span class="stat-label" style="font-size:13px;color:#8e8e93;line-height:1.4;">platforms benchmarked</span>
+      </div>
+      <div class="stat-item" style="text-align:left;padding:20px 24px;background:rgba(245,245,247,0.6);border-radius:10px;">
+        <span class="stat-num" style="font-family:'Baskervville',Georgia,serif;font-size:36px;font-weight:600;color:#1d1d1f;display:block;margin-bottom:4px;">10</span>
+        <span class="stat-label" style="font-size:13px;color:#8e8e93;line-height:1.4;">engineers interviewed</span>
+      </div>
+      <div class="stat-item" style="text-align:left;padding:20px 24px;background:rgba(245,245,247,0.6);border-radius:10px;">
+        <span class="stat-num" style="font-family:'Baskervville',Georgia,serif;font-size:36px;font-weight:600;color:#1d1d1f;display:block;margin-bottom:4px;">4</span>
+        <span class="stat-label" style="font-size:13px;color:#8e8e93;line-height:1.4;">themes emerged</span>
+      </div>
+    </div>
+    <div class="subsection">
+      <h3>Competitive Analysis</h3>
+      <img src="assets/images/commonwealth/COMP ANALYSIS.png" alt="Competitive analysis" style="width:100%;max-width:560px;margin-top:20px;">
+      <div class="comp-two-col">
+        <div>
+          <span class="comp-col-label">Shared strengths</span>
+          <ul class="comp-list strengths">
+            <li>Developer-first information architecture</li>
+            <li>Self-service access, no sales call required</li>
+            <li>Interactive sandbox environments</li>
+            <li>Personalized onboarding</li>
+          </ul>
+        </div>
+        <div>
+          <span class="comp-col-label">Shared weaknesses</span>
+          <ul class="comp-list weaknesses">
+            <li>Inflexible or opaque pricing</li>
+            <li>High technical ceilings that gatekeep less experienced developers</li>
+            <li>Sales-gated onboarding creates friction before developers see value</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>User Interviews</h3>
+      <div class="interview-card-grid">
+        <div class="interview-card">
+          <span class="interview-card-theme">Documentation</span>
+          <p class="interview-card-quote">"Sample code is the 
+        best kind of documentation."</p>
+          <span class="interview-card-source">PM @ Google</span>
+        </div>
+        <div class="interview-card">
+          <span class="interview-card-theme">Integration 
+        friction</span>
+          <p class="interview-card-quote">"Ease of integration 
+        is one of the key factors that determine a great 
+        developer experience."</p>
+          <span class="interview-card-source">Engineer @ 
+        Google</span>
+        </div>
+        <div class="interview-card">
+          <span class="interview-card-theme">Security</span>
+          <p class="interview-card-quote">"The main challenge 
+        isn't just coding the API, but navigating rigorous 
+        security checks."</p>
+          <span class="interview-card-source">Engineer @ 
+        IBM</span>
+        </div>
+        <div class="interview-card">
+          <span class="interview-card-theme">Trust signals</span>
+          <p class="interview-card-quote">"If you can't rely 
+        on an API, you won't build on it."</p>
+          <span class="interview-card-source">PM @ Google</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SYNTHESIS -->
+<div id="cb-synthesis" class="project-section">
+  <h2 class="section-title">Synthesis</h2>
+  <div class="section-content">
+    <div class="subsection">
+      <h3>Affinity Mapping</h3>
+      <p>We mapped everything we heard into clusters and let the patterns speak.</p>
+      <img src="assets/images/commonwealth/Affinity Mapping.png" alt="Affinity mapping" style="width:100%;border-radius:8px;margin:24px 0;">
+    </div>
+
+    <div class="subsection">
+      <h3>Two Personas</h3>
+      <p>We built two personas grounded directly in our interview data, representing the two most common developer profiles we encountered.</p>
+      <div class="case-img-row">
+        <div class="persona-hover-wrap">
+          <img src="assets/images/commonwealth/User Persona_ Implementer.png" alt="Developer Dara persona">
+          <div class="persona-hover-text">
+            <p>Needs docs that reflect today, not six months ago. Outdated documentation doesn&rsquo;t just slow her down, it breaks her trust in the whole platform.</p>
+          </div>
+        </div>
+        <div class="persona-hover-wrap">
+          <img src="assets/images/commonwealth/User Persona_ Adopter.png" alt="Engineer Eli persona">
+          <div class="persona-hover-text">
+            <p>Needs to decide without talking to sales. If onboarding is gated, he&rsquo;s already moved on.</p>
+          </div>
+        </div>
+      </div>
+      <p style="margin-top:16px;">Every design decision ran through these two lenses: what does Eli need at onboarding, and what would Dara actually click on.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>Journey Maps</h3>
+      <p>Mapping both journeys across seven stages made one thing clear: trust didn&rsquo;t break at implementation. It broke earlier, at onboarding, before developers had even seen what the platform could do.</p>
+      <div class="case-img-row">
+        <img src="assets/images/commonwealth/User Journey_ Implementer.png" alt="Developer Dara journey map">
+        <img src="assets/images/commonwealth/User Journey_ Adopter.png" alt="Engineer Eli journey map">
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>Six Key Insights</h3>
+      <div class="insight-toggle-grid">
+        <div class="insight-toggle-item">
+          <span class="insight-toggle-title">Self-Sufficient Documentation</span>
+          <span class="insight-toggle-desc">Developers want to integrate without contacting support. Documentation is the primary onboarding tool.</span>
+        </div>
+        <div class="insight-toggle-item">
+          <span class="insight-toggle-title">External Integration Experience</span>
+          <span class="insight-toggle-desc">Poor documentation, unclear ownership, and compatibility uncertainty make external APIs hard to trust.</span>
+        </div>
+        <div class="insight-toggle-item">
+          <span class="insight-toggle-title">Smooth Hand-Off</span>
+          <span class="insight-toggle-desc">Consistent naming conventions and readable patterns reduce confusion in multi-team API ecosystems.</span>
+        </div>
+        <div class="insight-toggle-item">
+          <span class="insight-toggle-title">Use Case Flexibility</span>
+          <span class="insight-toggle-desc">Rigid APIs that don&rsquo;t adapt to developer workflows limit adoption and innovation.</span>
+        </div>
+        <div class="insight-toggle-item">
+          <span class="insight-toggle-title">Security First</span>
+          <span class="insight-toggle-desc">Trust is built through sandbox credentials, clear compliance guidance, and transparent authentication requirements.</span>
+        </div>
+        <div class="insight-toggle-item">
+          <span class="insight-toggle-title">Building User Dependency</span>
+          <span class="insight-toggle-desc">Reliability signals, uptime, rate limits, changelogs, determine long-term trust. APIs that go quiet get abandoned.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- IDEATION -->
+<div id="cb-ideation" class="project-section">
+  <h2 class="section-title">Ideation</h2>
+  <div class="section-content">
+    <p>Using Crazy 8s and a 2x2 impact/effort matrix, we generated and prioritized eight feature concepts down to four.</p>
+    <img src="assets/images/commonwealth/Crazy 8s.png" alt="Crazy 8s ideation" class="case-img">
+    <p class="case-img-caption">Crazy 8s: eight feature concepts organized by developer pain point</p>
+    <div class="case-img-row" style="margin-top:0;">
+      <img src="assets/images/commonwealth/4x4 Matrix.png" alt="2x2 impact/effort matrix">
+      <img src="assets/images/commonwealth/User Flow.png" alt="User flow">
+    </div>
+
+    <div class="subsection">
+      <h3>High Priority Features</h3>
+      <div class="findings-grid">
+        <div class="finding-item"><span class="finding-label">Personalized Onboarding</span><p>An adaptive quiz that tailors the portal experience to each developer&rsquo;s role, experience level, and goals.</p></div>
+        <div class="finding-item"><span class="finding-label">Learning Hub</span><p>A unified resource center with tutorials, guides, and documentation organized around real use cases.</p></div>
+        <div class="finding-item"><span class="finding-label">Interactive Testing</span><p>A sandboxed environment for testing real API requests without external setup.</p></div>
+        <div class="finding-item"><span class="finding-label">Notifications</span><p>A centralized feed for API changes, updates, and warnings so teams can plan safely.</p></div>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>User Flow</h3>
+      <p>The user flow became the structural backbone of the prototype:</p>
+      <div class="user-flow-path">Homepage &rarr; Onboarding Quiz (4 steps) &rarr; Personalized APIs Page &rarr;<br>Specific API &rarr; [Introduction &middot; Use Cases &middot; Learning Hub &middot; Documentation &middot; Interactive Testing &middot; Recent Updates]</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROTOTYPE -->
+<div id="cb-prototype" class="project-section">
+  <h2 class="section-title">Prototype</h2>
+  <div class="section-content">
+    <div id="commbank-proto-carousel" style="display:none;"></div><!-- removed; images now inline -->
+
+    <div class="subsection">
+      <h3>Screen 1: Personalized Onboarding</h3>
+      <div class="case-img-row">
+        <div class="case-img-browser">
+            <div class="case-img-browser-bar">
+                <div class="case-img-browser-dot" style="background:#ff5f57;"></div>
+                <div class="case-img-browser-dot" style="background:#F3D98F;"></div>
+                <div class="case-img-browser-dot" style="background:#28c840;"></div>
+                <div class="case-img-browser-url"></div>
+            </div>
+            <img src="assets/images/commonwealth/Start.png" alt="Onboarding quiz start">
+        </div>
+        <img src="assets/images/commonwealth/Onboarding 1.png" alt="Onboarding quiz question" class="case-img">
+      </div>
+      <p>Four questions, enough to personalize without losing people to drop-off. Skip is always visible because developers told us they distrust any friction before they&rsquo;ve seen value. The progress bar is a small thing that does a lot: it signals commitment, not a trap.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>Screen 2: APIs Page</h3>
+      <div class="case-img-browser">
+          <div class="case-img-browser-bar">
+              <div class="case-img-browser-dot" style="background:#ff5f57;"></div>
+              <div class="case-img-browser-dot" style="background:#F3D98F;"></div>
+              <div class="case-img-browser-dot" style="background:#28c840;"></div>
+              <div class="case-img-browser-url"></div>
+          </div>
+          <img src="assets/images/commonwealth/API page carousel.png" alt="APIs page">
+      </div>
+      <p>Recommendations surface first based on quiz answers, but nothing gets hidden. We heard this clearly from senior engineers: restrict visibility and you lose trust immediately. Personalization without paternalism.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>Screen 3: Learning Hub</h3>
+      <div class="case-img-browser">
+          <div class="case-img-browser-bar">
+              <div class="case-img-browser-dot" style="background:#ff5f57;"></div>
+              <div class="case-img-browser-dot" style="background:#F3D98F;"></div>
+              <div class="case-img-browser-dot" style="background:#28c840;"></div>
+              <div class="case-img-browser-url"></div>
+          </div>
+          <img src="assets/images/commonwealth/Learning Hub.png" alt="Learning hub">
+      </div>
+      <p>One hub, two modes. Beginners want walkthroughs, senior engineers want reference docs. The tab structure came directly from what people described in interviews, different formats for different stages.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>Screen 4: API Playground</h3>
+      <div class="case-img-browser">
+          <div class="case-img-browser-bar">
+              <div class="case-img-browser-dot" style="background:#ff5f57;"></div>
+              <div class="case-img-browser-dot" style="background:#F3D98F;"></div>
+              <div class="case-img-browser-dot" style="background:#28c840;"></div>
+              <div class="case-img-browser-url"></div>
+          </div>
+          <img src="assets/images/commonwealth/API Playground.png" alt="API Playground">
+      </div>
+      <p>The blank sandbox problem is real: developers open a playground with no obvious starting point and immediately feel lost. Scoping by goal before you start (Process Payments, Retrieve Data, Authentication) removes that moment of confusion.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>Screen 5: Documentation</h3>
+      <div class="case-img-browser">
+          <div class="case-img-browser-bar">
+              <div class="case-img-browser-dot" style="background:#ff5f57;"></div>
+              <div class="case-img-browser-dot" style="background:#F3D98F;"></div>
+              <div class="case-img-browser-dot" style="background:#28c840;"></div>
+              <div class="case-img-browser-url"></div>
+          </div>
+          <img src="assets/images/commonwealth/Documentation.png" alt="Documentation">
+      </div>
+      <p>Three columns mirroring Stripe and Twilio. The anchor links came from a specific complaint we heard: having to scroll through pages of documentation just to find one parameter. Jump-to links solve that.</p>
+    </div>
+
+    <div class="subsection">
+      <h3>Additional Screens</h3>
+      <div class="case-img-row">
+        <img src="assets/images/commonwealth/Use Cases.png" alt="Use cases">
+        <img src="assets/images/commonwealth/Updates.png" alt="Updates and notifications">
+      </div>
+      <img src="assets/images/commonwealth/FAQs.png" alt="FAQs" class="case-img" style="margin-top:16px;">
+    </div>
+  </div>
+</div>
+
+<!-- IMPACT -->
+<div id="cb-impact" class="project-section">
+  <h2 class="section-title">Impact</h2>
+  <div class="section-content">
+    <div class="interview-quote">
+      &ldquo;I was totally impressed by the quality of work delivered by the Berkeley Innovation team, it was a pleasure collaborating together.&rdquo;
+      <p class="interview-source">CommBank Payments Team</p>
+    </div>
+    <p>CommBank subsequently published a LinkedIn post naming the team by name and citing the project as part of their ongoing commitment to developer-first payments infrastructure.</p>
+
+    <div class="subsection">
+      <h3>Design Outcomes</h3>
+      <div class="findings-grid">
+        <div class="finding-item"><span class="finding-label">Clearer Onboarding</span><p>A four-step quiz routes developers to relevant APIs, tutorials, and entry points immediately on landing, reducing the &ldquo;what do I do next?&rdquo; ambiguity.</p></div>
+        <div class="finding-item"><span class="finding-label">Stronger Trust Signals</span><p>Security requirements, uptime metrics, and version changelogs surfaced earlier in the developer journey, addressing the trust breakdown at Onboarding and Research stages.</p></div>
+        <div class="finding-item"><span class="finding-label">Faster Time-to-First-Success</span><p>The API Playground eliminates external setup, so developers make their first real API call from within the portal, directly reducing time-to-value.</p></div>
+        <div class="finding-item"><span class="finding-label">Self-Sufficient Discovery</span><p>The Learning Hub, Use Cases, and FAQs sections consolidate scattered resources into one navigable center, reducing the back-and-forth developers described as their biggest frustration.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REFLECTIONS -->
+<div id="cb-reflect" class="project-section">
+  <h2 class="section-title">Reflections</h2>
+  <div class="section-content">
+    <div class="subsection">
+      <h3>What I&rsquo;d Do Differently</h3>
+      <p>We didn&rsquo;t run usability testing on the final prototype before presenting. The research was genuinely strong, but there&rsquo;s a difference between validating assumptions and watching someone actually use what you built. I&rsquo;d want at least two rounds of testing with developers similar to Dara and Eli before any handoff.</p>
+    </div>
+    <div class="subsection">
+      <h3>What This Project Taught Me</h3>
+      <p>Research is the groundwork everything gets built on. That sounds obvious until you&rsquo;re sitting across from a Staff Engineer at Google who tells you exactly why they abandoned the last API they tried to adopt, and you realize that without that conversation, you would have designed the wrong thing entirely. The interviews made this project.</p>
+    </div>
+    <div class="subsection" style="margin-top:40px;">
+      <h3>The Team</h3>
+      <p>Huge thank you to the team that brought this project to life!</p>
+      <img src="assets/images/commonwealth/CommBank Team.JPEG" alt="CommBank team" class="case-img team-photo">
+      <p class="team-names-inline" style="margin:24px 0 0;text-align:center;font-size:15px;line-height:1.6;color:#8e8e93;font-weight:400;">
+        <span>Nicholas Kim</span><span style="color:rgba(0,0,0,0.22);margin:0 0.65em;user-select:none;" aria-hidden="true">&middot;</span><span>Dylan Hoan</span><span style="color:rgba(0,0,0,0.22);margin:0 0.65em;user-select:none;" aria-hidden="true">&middot;</span><span>Sejal Bilwar</span><span style="color:rgba(0,0,0,0.22);margin:0 0.65em;user-select:none;" aria-hidden="true">&middot;</span><span>Hailie Atkinson</span>
+      </p>
+    </div>
+  </div>
+</div>
+
+</div>
+        </div>
+    <script>
+    function goBack() {
+        document.body.style.transition = 'opacity 0.3s ease';
+        document.body.style.opacity = '0';
+        setTimeout(function() { window.location.href = 'index.html'; }, 300);
+    }
+
+    function setActiveSidebar(sectionId) {
+        document.querySelectorAll('.sidebar-item[data-section]').forEach(function(item) {
+            item.classList.toggle('active', item.getAttribute('data-section') === sectionId);
+        });
+    }
+
+    function scrollToSection(sectionId) {
+        var section = document.getElementById(sectionId);
+        var ca = document.querySelector('.content-area.project-content');
+        if (section && ca) {
+            ca.scrollTo({ top: section.offsetTop - 40, behavior: 'smooth' });
+            setActiveSidebar(sectionId);
+        }
+    }
+
+    (function setupScrollSync() {
+        var ca = document.querySelector('.content-area.project-content');
+        if (!ca) return;
+        var sections = (ca.getAttribute('data-sections') || '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+        if (!sections.length) return;
+        ca.addEventListener('scroll', function() {
+            var cur = sections[0];
+            var sp = ca.scrollTop;
+            sections.forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el && el.offsetTop - 120 <= sp) cur = id;
+            });
+            setActiveSidebar(cur);
+        });
+    })();
+
+    (function setupCursor() {
+        var dot = document.createElement('div');
+        dot.className = 'cursor-dot';
+        document.body.appendChild(dot);
+        var sel = 'a, button, .sidebar-item, .sidebar-back';
+        window.addEventListener('pointermove', function(e) {
+            dot.style.left = e.clientX + 'px';
+            dot.style.top = e.clientY + 'px';
+        }, { passive: true });
+        document.addEventListener('pointerover', function(e) {
+            if (e.target instanceof Element && e.target.closest(sel)) dot.classList.add('is-hovering');
+        });
+        document.addEventListener('pointerout', function(e) {
+            if (e.target instanceof Element && e.target.closest(sel)) dot.classList.remove('is-hovering');
+        });
+    })();
+
+    (function setupNavHide() {
+        var nav = document.querySelector('.site-nav');
+        var ca = document.querySelector('.content-area.project-content');
+        if (!nav || !ca) return;
+        var lastScroll = 0;
+        ca.addEventListener('scroll', function() {
+            var current = ca.scrollTop;
+            if (current > lastScroll && current > 60) {
+                nav.classList.add('hidden');
+            } else {
+                nav.classList.remove('hidden');
+            }
+            lastScroll = current;
+        }, { passive: true });
+    })();
+
+    (function setupFadeIn() {
+        var scrollRoot = document.querySelector('.content-area.project-content');
+        if (!scrollRoot) return;
+        var els = scrollRoot.querySelectorAll(
+            '.project-subtitle, .project-section, .case-img, .case-img-browser, ' +
+            '.case-img-row, .findings-grid, .finding-item, ' +
+            '.interview-quote, .cb-quote, .subsection, ' +
+            '.stat-row, .numbered-insights, .milestone-grid, ' +
+            '.takeaway-block, .project-meta, .project-banner, ' +
+            '.comp-two-col, .persona-hover-wrap, .insight-toggle-grid, .insight-toggle-item'
+        );
+        els.forEach(function(el) {
+            el.classList.add('fade-up');
+        });
+        if (!('IntersectionObserver' in window)) {
+            els.forEach(function(el) { el.classList.add('is-visible'); });
+            return;
+        }
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { root: scrollRoot, threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+        els.forEach(function(el) { observer.observe(el); });
+    })();
+
+    // carousel removed; images now inline
+</script>
+</body>
+</html>

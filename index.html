@@ -11,6 +11,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Baskervville:ital@0;1&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Ballet:opsz@16..72&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600&display=swap');
         
         * {
             margin: 0;
@@ -112,7 +113,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            z-index: 220;
+            z-index: 1000;
             backdrop-filter: blur(14px);
         }
 
@@ -125,11 +126,34 @@
             font-weight: 400;
         }
 
+        .nav-logo {
+            font-family: 'DM Sans', -apple-system, sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            color: #1d1d1f;
+            text-decoration: none;
+            text-transform: none;
+        }
+
+        .site-nav a.nav-logo:link,
+        .site-nav a.nav-logo:visited {
+            color: #1d1d1f;
+        }
+
         .nav-link {
-            cursor: pointer;
             text-transform: lowercase;
             text-decoration: none;
             color: inherit;
+        }
+
+        .site-nav .nav-link {
+            font-family: 'DM Sans', -apple-system, sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            color: #6e6e73;
+            background: none;
+            border: none;
         }
 
         .nav-icon-link {
@@ -143,6 +167,7 @@
             font-size: 11px;
             transition: background 200ms ease, border-color 200ms ease, transform 180ms ease;
             color: #1d1d1f;
+            text-decoration: none;
         }
 
         .nav-icon-link svg {
@@ -155,13 +180,14 @@
         .site-nav a.nav-link:link,
         .site-nav a.nav-link:visited {
             text-decoration: none;
-            color: inherit;
+            color: #6e6e73;
         }
 
         .site-nav .nav-link:hover,
         .site-nav .nav-link:focus-visible {
             background: linear-gradient(90deg, #E36887, #EA7A55, #F3D98F);
             -webkit-background-clip: text;
+            background-clip: text;
             color: transparent;
         }
 
@@ -1736,7 +1762,6 @@
             font-weight: 400;
             font-size: 1.06em;
             transition: color 160ms ease;
-            cursor: default;
         }
 
         .home-cursive-connection:hover {
@@ -1757,6 +1782,22 @@
 
         .home-scroll-spacer {
             height: 0px;
+        }
+
+        .scroll-hint {
+            margin-top: 48px;
+            color: #8e8e93;
+            animation: scrollBounce 2s ease-in-out infinite;
+            opacity: 1;
+            transition: opacity 0.4s ease;
+        }
+        .scroll-hint.is-hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        @keyframes scrollBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(6px); }
         }
 
         @media (max-width: 900px) {
@@ -1785,106 +1826,141 @@
         }
 
         /* Home work gallery */
+        .selected-work-label {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: #8e8e93;
+            margin-bottom: 24px;
+        }
+
         .home-gallery {
-            padding: 0px 60px 120px;
-            background: white;
-        }
-
-        .home-gallery-inner {
-            width: 100%;
-            max-width: 1100px;
+            padding: 32px 64px 80px;
+            max-width: 1200px;
             margin: 0 auto;
+            background: #ffffff;
         }
 
-        .home-gallery-grid {
+        #homeGallery {
+            scroll-margin-top: 72px;
+        }
+
+        .gallery-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .gallery-grid-bottom {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 18px;
+            gap: 14px;
         }
+        .gallery-card-hero { height: 300px; }
+        .gallery-card-small { height: 220px; }
 
         .gallery-card {
             position: relative;
-            border-radius: 0px;
+            border-radius: 0;
             overflow: hidden;
-            background: white;
-            border: 1px solid rgba(0,0,0,0.10);
-            cursor: pointer;
-            min-height: 340px;
+            height: 280px;
+            border: 0.5px solid rgba(0,0,0,0.08);
         }
 
-        .gallery-media {
+        .gallery-card-img {
             position: absolute;
             inset: 0;
-            background: #f5f5f7;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.5s ease;
         }
+        .gallery-card:hover .gallery-card-img { transform: scale(1.03); }
 
-        .gallery-media img,
-        .gallery-media video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .gallery-media video {
-            opacity: 0;
-            transition: opacity 180ms ease;
-        }
-
-        .gallery-card.has-video .gallery-media img {
-            transition: opacity 180ms ease;
-        }
-
-        .gallery-card.has-video:hover .gallery-media video {
-            opacity: 1;
-        }
-
-        .gallery-card.has-video:hover .gallery-media img {
-            opacity: 0;
-        }
-
-        .gallery-overlay {
+        .gallery-card-dim {
             position: absolute;
             inset: 0;
-            background: rgba(0,0,0,0.0);
-            transition: background 520ms ease-out;
+            background: rgba(0,0,0,0);
+            transition: background 0.35s ease;
+        }
+        .gallery-card:hover .gallery-card-dim { background: rgba(0,0,0,0.72); }
+
+        .gallery-card-rest {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: linear-gradient(
+                to top,
+                rgba(0,0,0,0.88) 0%,
+                rgba(0,0,0,0.55) 38%,
+                rgba(0,0,0,0.2) 68%,
+                transparent 100%
+            );
+            padding: 40px 24px 22px;
+            transition: opacity 0.25s ease;
+        }
+        .gallery-card:hover .gallery-card-rest { opacity: 0; }
+
+        .gallery-card-rest-title {
+            font-size: 22px;
+            font-weight: 500;
+            color: #fff;
+            font-family: 'DM Sans', sans-serif;
         }
 
-        .gallery-meta {
+        .gallery-card-rest-sub {
+            font-size: 13px;
+            color: rgba(255,255,255,0.88);
+            margin-top: 3px;
+        }
+
+        .gallery-card-detail {
             position: absolute;
             inset: 0;
             display: flex;
-            align-items: center;
-            justify-content: center;
             flex-direction: column;
+            justify-content: flex-end;
+            padding: 24px;
             opacity: 0;
-            transform: translateY(10px);
-            transition: opacity 520ms ease-out, transform 520ms ease-out;
-            color: white;
-            text-shadow: 0 6px 18px rgba(0,0,0,0.45);
+            transform: translateY(6px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .gallery-card:hover .gallery-card-detail { opacity: 1; transform: translateY(0); }
+
+        .gallery-card-year {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.65);
+            letter-spacing: 0.1em;
+            margin-bottom: 6px;
         }
 
-        .gallery-title {
-            font-size: 16px;
-            font-weight: 800;
-            letter-spacing: 0.08em;
-            margin-bottom: 4px;
+        .gallery-card-title {
+            font-size: 22px;
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: 5px;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .gallery-card-subtitle {
+            font-size: 14px;
+            color: rgba(255,255,255,0.78);
+            margin-bottom: 14px;
+        }
+
+        .gallery-card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+
+        .gallery-tag {
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.06em;
             text-transform: uppercase;
-        }
-
-        .gallery-subtitle {
-            font-size: 13px;
-            font-weight: 600;
-            opacity: 0.92;
-        }
-
-        .gallery-card:hover .gallery-overlay {
-            background: rgba(0,0,0,0.35);
-        }
-
-        .gallery-card:hover .gallery-meta {
-            opacity: 1;
-            transform: translateY(0);
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: 0.5px solid rgba(255,255,255,0.4);
+            color: rgba(255,255,255,0.85);
+            font-family: 'IBM Plex Mono', monospace;
         }
 
         @media (max-width: 900px) {
@@ -1892,7 +1968,7 @@
                 padding: 56px 28px 96px;
             }
 
-            .home-gallery-grid {
+            .gallery-grid-bottom {
                 grid-template-columns: 1fr;
             }
         }
@@ -2067,28 +2143,52 @@
                 color: #B4B535;
             }
         }
+
+        /* Desktop: system cursor fully hidden — custom dot only (overrides any cursor:pointer above) */
+        @media (min-width: 769px) {
+            html {
+                cursor: none !important;
+            }
+            body,
+            body *,
+            body *::before,
+            body *::after {
+                cursor: none !important;
+            }
+        }
     </style>
 </head>
 <body>
     <header class="site-nav">
         <div class="nav-left">
-            <span class="nav-link" onclick="navigateTo('home')">work</span>
-            <a class="nav-link" href="#" target="_blank" rel="noopener">resume</a>
+            <a class="nav-logo" href="index.html">Landy Manzanero</a>
         </div>
         <div class="nav-right">
-            <span class="nav-link" onclick="navigateTo('about')">about</span>
-            <a class="nav-icon-link" href="https://www.linkedin.com/in/landynmanzanero/" target="_blank" rel="noopener" aria-label="LinkedIn">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <rect x="3" y="3" width="18" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"></rect>
+            <a class="nav-link" href="index.html#homeGallery">work</a>
+            <a class="nav-link" href="index.html#about" onclick="event.preventDefault(); navigateTo('about');">about</a>
+            <a class="nav-link" href="assets/Landy_Manzanero_Resume.pdf" target="_blank">resume</a>
+            <a class="nav-icon-link" href="https://www.linkedin.com/in/landynmanzanero/"
+               target="_blank" rel="noopener" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" aria-hidden="true"
+                     style="width:15px;height:15px;display:block;fill:currentColor;">
+                    <rect x="3" y="3" width="18" height="18" rx="2" fill="none"
+                          stroke="currentColor" stroke-width="1.4"></rect>
                     <rect x="7" y="10" width="2" height="7" fill="currentColor"></rect>
                     <circle cx="8" cy="7" r="1.2" fill="currentColor"></circle>
-                    <path d="M12.5 10h1.9v1c.4-.7 1.1-1.2 2.1-1.2 1.6 0 2.7 1 2.7 3.1v3.9h-2.1v-3.5c0-1-.3-1.6-1.1-1.6-.9 0-1.3.7-1.3 1.7v3.4h-2.2z" fill="currentColor"></path>
+                    <path d="M12.5 10h1.9v1c.4-.7 1.1-1.2 2.1-1.2 1.6 0 2.7 1
+                             2.7 3.1v3.9h-2.1v-3.5c0-1-.3-1.6-1.1-1.6-.9 0-1.3.7
+                             -1.3 1.7v3.4h-2.2z" fill="currentColor"></path>
                 </svg>
             </a>
-            <a class="nav-icon-link" href="mailto:landynmanzanero@berkeley.edu" aria-label="Email">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"></rect>
-                    <polyline points="5,7 12,12 19,7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></polyline>
+            <a class="nav-icon-link" href="mailto:landynmanzanero@berkeley.edu"
+               aria-label="Email">
+                <svg viewBox="0 0 24 24" aria-hidden="true"
+                     style="width:15px;height:15px;display:block;fill:currentColor;">
+                    <rect x="3" y="5" width="18" height="14" rx="2" fill="none"
+                          stroke="currentColor" stroke-width="1.4"></rect>
+                    <polyline points="5,7 12,12 19,7" fill="none"
+                              stroke="currentColor" stroke-width="1.4"
+                              stroke-linecap="round" stroke-linejoin="round"></polyline>
                 </svg>
             </a>
         </div>
@@ -2116,49 +2216,79 @@
                     </p>
                 </div>
 
-                
+                <div class="scroll-hint" id="scrollHint">
+                    <svg width="20" height="20" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="1.5"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </div>
             </div>
         </div>
         <div class="home-scroll-spacer" aria-hidden="true"></div>
 
         <section class="home-gallery" id="homeGallery" aria-label="Work gallery">
-            <div class="home-gallery-inner">
-                <div class="home-gallery-grid">
-                    <div class="gallery-card" role="button" tabindex="0" onclick="showProject('commbank')">
-                        <div class="gallery-media">
-                            <img src="assets/images/commonwealth/CommBank Cover.png" alt="CommonWealth Bank project preview">
-                        </div>
-                        <div class="gallery-overlay"></div>
-                        <div class="gallery-meta">
-                            <div class="gallery-title">CommonWealth Bank</div>
+            <p class="selected-work-label">Selected Work</p>
+            <div class="gallery-grid">
+                <div class="gallery-card gallery-card-hero"
+                     onclick="goToPage('commonwealth.html')" role="button" tabindex="0">
+                    <div class="gallery-card-img"
+                         style="background-image: url('assets/images/commonwealth/CommBank%20Banner.png');"></div>
+                    <div class="gallery-card-dim"></div>
+                    <div class="gallery-card-rest">
+                        <div class="gallery-card-rest-title">Commonwealth Bank</div>
+                        <div class="gallery-card-rest-sub">Developer Portal Redesign</div>
+                    </div>
+                    <div class="gallery-card-detail">
+                        <div class="gallery-card-year">2025</div>
+                        <div class="gallery-card-title">Commonwealth Bank</div>
+                        <div class="gallery-card-subtitle">Developer Portal Redesign</div>
+                        <div class="gallery-card-tags">
+                            <span class="gallery-tag">UX Research</span>
+                            <span class="gallery-tag">Product Design</span>
+                            <span class="gallery-tag">DevEx</span>
                         </div>
                     </div>
-
-                    <div class="gallery-card" role="button" tabindex="0" onclick="showProject('annafreud')">
-                        <div class="gallery-media">
-                            <img src="assets/images/annafreud/AnnaFreudCover.png" alt="Anna Freud project preview">
+                </div>
+                <div class="gallery-grid-bottom">
+                    <div class="gallery-card gallery-card-small"
+                         onclick="goToPage('annafreud.html')" role="button" tabindex="0">
+                        <div class="gallery-card-img"
+                             style="background-image: url('assets/images/annafreud/Anna Freud Cover.png');"></div>
+                        <div class="gallery-card-dim"></div>
+                        <div class="gallery-card-rest">
+                            <div class="gallery-card-rest-title">Anna Freud</div>
+                            <div class="gallery-card-rest-sub">Mental Health Platform</div>
                         </div>
-                        <div class="gallery-overlay"></div>
-                        <div class="gallery-meta">
-                            <div class="gallery-title">Anna Freud</div>
+                        <div class="gallery-card-detail">
+                            <div class="gallery-card-year">2025</div>
+                            <div class="gallery-card-title">Anna Freud</div>
+                            <div class="gallery-card-subtitle">Mental Health Platform</div>
+                            <div class="gallery-card-tags">
+                                <span class="gallery-tag">UX Research</span>
+                                <span class="gallery-tag">Product Design</span>
+                                <span class="gallery-tag">Mental Health</span>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="gallery-card" role="button" tabindex="0" onclick="showProject('baro')">
-                        <div class="gallery-media">
-                            <img src="assets/images/baro/BaroBehaviorCover.png" alt="Baro Behavior project preview">
+                    <div class="gallery-card gallery-card-small"
+                         onclick="goToPage('baro.html')" role="button" tabindex="0">
+                        <div class="gallery-card-img"
+                             style="background-image: url('assets/images/baro/Baro Cover.png');"></div>
+                        <div class="gallery-card-dim"></div>
+                        <div class="gallery-card-rest">
+                            <div class="gallery-card-rest-title">Baro Behavior</div>
+                            <div class="gallery-card-rest-sub">K–12 Intervention Platform</div>
                         </div>
-                        <div class="gallery-overlay"></div>
-                        <div class="gallery-meta">
-                            <div class="gallery-title">Baro Behavior</div>
-                        </div>
-                    </div>
-
-                    <div class="gallery-card" role="button" tabindex="0" onclick="alert('Add SUR project page next')">
-                        <div class="gallery-media"></div>
-                        <div class="gallery-overlay"></div>
-                        <div class="gallery-meta">
-                            <div class="gallery-title">SUR</div>
+                        <div class="gallery-card-detail">
+                            <div class="gallery-card-year">2025</div>
+                            <div class="gallery-card-title">Baro Behavior</div>
+                            <div class="gallery-card-subtitle">K–12 Intervention Platform</div>
+                            <div class="gallery-card-tags">
+                                <span class="gallery-tag">Full Stack</span>
+                                <span class="gallery-tag">Tech Lead</span>
+                                <span class="gallery-tag">EdTech</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2269,619 +2399,15 @@
         </div>
     </div>
 
-    <!-- PROJECT DETAIL PAGE (Commonwealth Bank Example) -->
-    <div id="project-commbank" class="page">
-        <div class="window">
-            <div class="window-body">
-                <div class="sidebar">
-                    <div class="sidebar-section">
-                        <button class="sidebar-back" onclick="navigateTo('home')">Back</button>
-                    </div>
-                    <div class="sidebar-section">
-                        <div class="sidebar-item active" data-section="overview" onclick="scrollToSection(event, 'overview')">Overview</div>
-                        <div class="sidebar-item" data-section="research" onclick="scrollToSection(event, 'research')">Research</div>
-                        <div class="sidebar-item" data-section="synthesis" onclick="scrollToSection(event, 'synthesis')">Synthesis</div>
-                        <div class="sidebar-item" data-section="personas" onclick="scrollToSection(event, 'personas')">Personas</div>
-                        <div class="sidebar-item" data-section="ideation" onclick="scrollToSection(event, 'ideation')">Ideation</div>
-                        <div class="sidebar-item" data-section="prototype" onclick="scrollToSection(event, 'prototype')">Prototype</div>
-                        <div class="sidebar-item" data-section="impact" onclick="scrollToSection(event, 'impact')">Impact</div>
-                    </div>
-                </div>
-                <div class="content-area project-content" id="project-content" data-sections="overview,research,synthesis,personas,ideation,prototype,impact">
-                    <p class="project-subtitle">COMMONWEALTH BANK • UX REDESIGN 2025</p>
-                    <div class="project-banner project-banner-commbank">
-                        <h1>Commonwealth Bank</h1>
-                        <p>Redesigning a developer-first payments portal experience.</p>
-                    </div>
-                    <div class="project-meta">
-                        <div class="meta-item">
-                            <h3>Role</h3>
-                            <p>Product Designer</p>
-                        </div>
-                        <div class="meta-item">
-                            <h3>Timeline</h3>
-                            <p>August – December 2025</p>
-                        </div>
-                        <div class="meta-item">
-                            <h3>Team</h3>
-                            <p>1 PM<br>4 Designers</p>
-                        </div>
-                        <div class="meta-item">
-                            <h3>Skills</h3>
-                            <p>User Research<br>Product Strategy<br>Prototyping</p>
-                        </div>
-                    </div>
-                    
-                    <div id="overview" class="project-section">
-                        <h2 class="section-title">Overview</h2>
-                        <div class="section-content">
-                            <p>Commonwealth Bank (CommBank) is Australia's largest financial institution, serving 17M+ customers across transaction banking services.</p>
-                            <p>The Payments Team's product, PaaS (Payments-as-a-Service), is a suite of APIs that makes connecting directly with CommBank's payment infrastructure seamless and cost-effective for corporate clients.</p>
-                            <p>CommBank's goal is to build a developer-first PaaS platform to drive adoption in an increasingly competitive landscape. Thus, we partnered with the Payments team to explore:</p>
-                            <p class="hmw-question">How might we, corporate payments, learn from developer-first platforms like Twilio, Stripe, and Snowflake?</p>
-                        </div>
-                    </div>
-                    
-                    <div id="research" class="project-section">
-                        <h2 class="section-title">Research</h2>
-                        <div class="section-content">
-                            <div class="subsection">
-                                <h3>Competitive Analysis</h3>
-                                <p>We benchmarked five leading API providers to identify what defines best-in-class developer experience (DevEx). With that, we examined tools, features, and services that address common user concerns.</p>
-                                <img src="assets/images/commonwealth/COMP ANALYSIS.png" alt="Competitive analysis logos" style="width: 100%; max-width: 560px; margin-top: 20px;">
-                            </div>
-                            
-                            <div class="subsection">
-                                <h3>User Interviews</h3>
-                                <p>We spoke with 10+ engineers and developers from companies like Google, Oracle, and IBM. From those conversations, we identified key factors that drive platform adoption: what developers value in third-party systems, what builds trust, and where onboarding friction occurs.</p>
-                            </div>
-                            
-                            <div class="subsection">
-                                <h3>Initial Findings</h3>
-                                <div class="findings-grid">
-                                    <div class="finding-item">
-                                        <span class="finding-label">Documentation</span>
-                                        <p>Poor documentation leads to unnecessary trial-and-error during onboarding</p>
-                                    </div>
-                                    <div class="finding-item">
-                                        <span class="finding-label">Integration</span>
-                                        <p>APIs that plug in and test quickly are preferred; issues arise when failure points are unclear</p>
-                                    </div>
-                                    <div class="finding-item">
-                                        <span class="finding-label">Security</span>
-                                        <p>Strong security builds trust, though required steps can slow development</p>
-                                    </div>
-                                    <div class="finding-item">
-                                        <span class="finding-label">Customer Support</span>
-                                        <p>Fast, reliable responses significantly improve DevEx</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div id="synthesis" class="project-section">
-                        <h2 class="section-title">Synthesis</h2>
-                        <div class="section-content">
-                            <p>We organized all our research data based on common patterns to uncover salient themes worth addressing further.</p>
-                            
-                            <img src="assets/images/commonwealth/Affinity Mapping.png" style="width: 100%; border-radius: 8px; margin: 24px 0;" alt="Affinity Mapping">
-                            
-                            <p style="margin-top: 24px;">Afterwards, we ran several rounds of iteration to develop the following key insights and focus areas:</p>
-                            
-                            <div class="subsection">
-                                <h3>Developers Prioritize</h3>
-                                <div class="findings-grid dev-prioritize-grid">
-                                    <div class="finding-item">
-                                        <span class="finding-label">Self-Sufficient Documentation</span>
-                                        <p>Clear, comprehensive docs that answer questions without requiring support</p>
-                                    </div>
-                                    <div class="finding-item">
-                                        <span class="finding-label">External Integration Experience</span>
-                                        <p>Smooth handoffs between systems with clear integration paths</p>
-                                    </div>
-                                    <div class="finding-item">
-                                        <span class="finding-label">Use Case Flexibility</span>
-                                        <p>APIs that adapt to diverse implementation scenarios</p>
-                                    </div>
-                                    <div class="finding-item">
-                                        <span class="finding-label">Security First</span>
-                                        <p>Robust security without sacrificing developer experience</p>
-                                    </div>
-                                    <div class="finding-item">
-                                        <span class="finding-label">Smooth Hand-Off</span>
-                                        <p>Clear transitions between discovery, implementation, and deployment</p>
-                                    </div>
-                                    <div class="finding-item">
-                                        <span class="finding-label">Building User Dependency</span>
-                                        <p>Creating lasting value that keeps developers engaged</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div id="personas" class="project-section">
-                        <h2 class="section-title">Personas</h2>
-                        <div class="section-content">
-                            <p>After synthesizing our findings, we defined two primary personas and mapped their journeys to pinpoint where trust breaks and onboarding friction appears.</p>
-                            <h3>User Personas</h3>
-                            <div id="commbank-personas-carousel" class="proto-carousel" data-carousel></div>
-                            <div class="subsection" style="margin-top: 32px;">
-                                <h3>User Journey Maps</h3>
-                                <p>We mapped the complete journey for both personas to identify pain points and opportunities.</p>
-                                <div id="commbank-journeys-carousel" class="proto-carousel" data-carousel></div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div id="ideation" class="project-section">
-                        <h2 class="section-title">Ideation</h2>
-                        <div class="section-content">
-                            <p>Based on our research synthesis, we conducted ideation sessions to explore solutions across the key focus areas:</p>
-                            <div id="commbank-ideation-carousel" class="proto-carousel" data-carousel></div>
-                            <div class="subsection">
-                                <h3>Prioritization</h3>
-                                <p>We used a 4x4 impact–effort matrix to prioritize what to build first.</p>
-                            </div>
-                            <div class="subsection">
-                                <h3>High Priority Features</h3>
-                                <div class="findings-grid">
-                                    <div class="finding-item">
-                                        <span class="finding-label">Personalized Onboarding</span>
-                                        <p>A short questionnaire that creates an adaptive guide through the portal</p>
-                                    </div>
-                                    <div class="finding-item">
-                                        <span class="finding-label">Interactive Testing</span>
-                                        <p>An embedded sandbox where developers can experiment safely</p>
-                                    </div>
-                                    <div class="finding-item">
-                                        <span class="finding-label">Learning Hub</span>
-                                        <p>A unified dashboard for tutorials, guides, and documentation</p>
-                                    </div>
-                                    <div class="finding-item">
-                                        <span class="finding-label">Notifications</span>
-                                        <p>A centralized hub for changes, updates, and news</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="subsection">
-                                <h3>User Flow</h3>
-                                <p>We mapped the complete user flow from landing page through onboarding to specific API implementation.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div id="prototype" class="project-section">
-                        <h2 class="section-title">Prototype</h2>
-                        <div class="section-content">
-                            <p>We created high-fidelity prototypes of the redesigned developer portal, following the journey from first landing on the site to deep integration.</p>
-                            <div id="commbank-proto-carousel" class="proto-carousel" data-carousel></div>
-                        </div>
-                    </div>
-
-                    <div id="impact" class="project-section">
-                        <h2 class="section-title">Impact</h2>
-                        <div class="section-content">
-                            <div class="subsection">
-                                <h3>Key Takeaways</h3>
-                                <p><strong class="takeaway-label">Self-Sufficient Documentation</strong><br>
-                                Developers want clear, consistent, and complete documentation so they can understand how an API works quickly, integrate it smoothly, and focus on building features instead of debugging or seeking help.</p>
-
-                                <p><strong class="takeaway-label">Smooth Hand-Off</strong><br>
-                                Consistent coding styles, naming conventions, and readable patterns minimize confusion and make large, multi-team API ecosystems easier to maintain.</p>
-
-                                <p><strong class="takeaway-label">External Integration Experience</strong><br>
-                                Teams often struggle to integrate external APIs because poor documentation, unclear ownership, and uncertain compatibility with business or legal needs make them difficult to trust and maintain.</p>
-
-                                <p><strong class="takeaway-label">Use Case Flexibility</strong><br>
-                                Developers value APIs that empower innovation by adapting to their products and workflows, rather than limiting creativity through rigid structures or narrow functionality.</p>
-
-                                <p><strong class="takeaway-label">Security First</strong><br>
-                                Developers seek to find trustworthy and reliable APIs that can deal with multiple tasks simultaneously while demonstrating basic security standards like authentication, encryption, and token protocols without risking security vulnerabilities.</p>
-
-                                <p><strong class="takeaway-label">Developing User Trust</strong><br>
-                                Developers gain confidence in APIs that demonstrate dependable performance through consistent uptime, clear rate limits, and proactive communication about changes.</p>
-                            </div>
-
-                            <div class="subsection">
-                                <h3>Outcome</h3>
-                                <p><strong class="takeaway-label">Clearer onboarding</strong><br> Reduced ambiguity around “what do I do next?” through guided entry points and curated learning paths.</p>
-
-                                <p><strong class="takeaway-label">Stronger trust signals</strong><br>
-                                Made security, reliability, and support expectations legible earlier in the journey.</p>
-
-                                <p><strong class="takeaway-label">Faster time-to-first-success</strong><br>
-                                Enabled quicker testing and iteration via interactive documentation patterns.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- PROJECT DETAIL PAGE (Anna Freud) -->
-    <div id="project-annafreud" class="page">
-        <div class="window">
-            <div class="window-body">
-                <div class="sidebar">
-                    <div class="sidebar-section">
-                        <button class="sidebar-back" onclick="navigateTo('home')">Back</button>
-                    </div>
-                    <div class="sidebar-section">
-                        <div class="sidebar-item active" data-section="af-overview" onclick="scrollToSection(event, 'af-overview')">Overview</div>
-                        <div class="sidebar-item" data-section="af-research" onclick="scrollToSection(event, 'af-research')">Research</div>
-                        <div class="sidebar-item" data-section="af-synthesis" onclick="scrollToSection(event, 'af-synthesis')">Synthesis</div>
-                        <div class="sidebar-item" data-section="af-personas" onclick="scrollToSection(event, 'af-personas')">Personas</div>
-                        <div class="sidebar-item" data-section="af-ideation" onclick="scrollToSection(event, 'af-ideation')">Ideation</div>
-                        <div class="sidebar-item" data-section="af-prototype" onclick="scrollToSection(event, 'af-prototype')">Prototype</div>
-                        <div class="sidebar-item" data-section="af-impact" onclick="scrollToSection(event, 'af-impact')">Impact</div>
-                    </div>
-                </div>
-                <div class="content-area project-content" id="project-content-annafreud" data-sections="af-overview,af-research,af-synthesis,af-personas,af-ideation,af-prototype,af-impact">
-                    <p class="project-subtitle">ANNA FREUD • PROJECT 2025</p>
-                    <div class="project-banner project-banner-annafreud">
-                        <h1>Anna Freud</h1>
-                        <p>Designing a clearer discovery experience for mental health resources with an AI-assisted workflow.</p>
-                    </div>
-
-                    <div class="project-meta">
-                        <div class="meta-item">
-                            <h3>Role</h3>
-                            <p>Product Designer</p>
-                        </div>
-                        <div class="meta-item">
-                            <h3>Timeline</h3>
-                            <p>January–May 2025</p>
-                        </div>
-                        <div class="meta-item">
-                            <h3>Team</h3>
-                            <p>1 PM<br>4 Designers</p>
-                        </div>
-                        <div class="meta-item">
-                            <h3>Skills</h3>
-                            <p>Research<br>UX Strategy<br>Prototyping</p>
-                        </div>
-                    </div>
-
-                    <div id="af-overview" class="project-section">
-                        <h2 class="section-title">Overview</h2>
-                        <div class="section-content">
-                            <p class="hmw-question">How might we provide young people and their families easier access to trusted information about mental health?</p>
-                            <p>The Anna Freud Centre provides resources supporting child and family mental health. This project focused on reducing friction in discovery and helping users feel confident they’re finding trustworthy, accurate guidance.</p>
-                        </div>
-                    </div>
-
-                    <div id="af-research" class="project-section">
-                        <h2 class="section-title">Research</h2>
-                        <div class="section-content">
-                            <div class="subsection">
-                                <h3>Secondary Research</h3>
-                                <p>We reviewed patterns and constraints around mental health information seeking, especially trust, accuracy, and sensitive user needs. We looked at platforms like <strong>earkick</strong>, <strong>Reach RX</strong>, and <strong>Sonar</strong>.</p>
-                            </div>
-
-                            <div class="subsection">
-                                <h3>Survey</h3>
-                                <div class="findings-grid">
-                                    <div class="finding-item">
-                                        <span class="finding-label">Objective</span>
-                                        <p>Understand barriers to accessing mental health resources.</p>
-                                    </div>
-                                    <div class="finding-item">
-                                        <span class="finding-label">Target Demographics</span>
-                                        <p>Ages 12–17, 18–22, 23–30, 30+.</p>
-                                    </div>
-                                    <div class="finding-item">
-                                        <span class="finding-label">Participants</span>
-                                        <p>Parents, kids, and young adults.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="subsection">
-                                <h3>Interviews</h3>
-                                <div class="findings-grid">
-                                    <div class="finding-item">
-                                        <span class="finding-label">Methods</span>
-                                        <p>Survey respondents who opted in for an interview.</p>
-                                    </div>
-                                    <div class="finding-item">
-                                        <span class="finding-label">Testing Process</span>
-                                        <p>15–20 minute interviews.</p>
-                                    </div>
-                                    <div class="finding-item">
-                                        <span class="finding-label">Procedure</span>
-                                        <p>Participants were given background context, then prompted to answer a set of qualitative questions.</p>
-                                    </div>
-                                    <div class="finding-item">
-                                        <span class="finding-label">Themes We Focused On</span>
-                                        <p>Parent confidence + addressing support needs, trust & perception of AI, and barriers to accessing mental health resources.</p>
-                                    </div>
-                                    <div class="finding-item">
-                                        <span class="finding-label">Interview Goals</span>
-                                        <p>Understand pain points in current experiences, identify indicators of trust and accessibility, and assess perception of AI in health care.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="subsection">
-                                <h3>Usability Tests</h3>
-                                <div class="findings-grid">
-                                    <div class="finding-item">
-                                        <span class="finding-label">Goals</span>
-                                        <p>Evaluate effectiveness of resource design, understand navigational preferences, and analyze usage habits.</p>
-                                    </div>
-                                    <div class="finding-item">
-                                        <span class="finding-label">Method</span>
-                                        <p>Prompt interviewees to answer a standardized set of questions to understand design and navigation flow preferences.</p>
-                                    </div>
-                                    <div class="finding-item">
-                                        <span class="finding-label">Tested On</span>
-                                        <p>Resources suggested by survey responses.</p>
-                                    </div>
-                                </div>
-                                <div class="usability-timeline">
-                                    <p class="timeline-duration"><span class="finding-label">Testing Duration</span> 10–15 minutes</p>
-                                    <div class="timeline-steps">
-                                        <div class="timeline-step">
-                                            <span class="finding-label">Before Testing</span>
-                                            <p>A small set of questions to understand usage habits of familiar resources.</p>
-                                        </div>
-                                        <div class="timeline-step">
-                                            <span class="finding-label">During Testing</span>
-                                            <p>While screen-sharing, users walk through and answer questions for a new resource.</p>
-                                        </div>
-                                        <div class="timeline-step">
-                                            <span class="finding-label">Post Testing</span>
-                                            <p>Questions about the experience of navigating the new resource.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="af-synthesis" class="project-section">
-                        <h2 class="section-title">Synthesis</h2>
-                        <div class="section-content">
-                            <p>We worked to understand users through <strong>affinity mapping</strong>, connecting themes across clusters to identify the strongest signals.</p>
-                            <div id="af-synthesis-carousel" class="proto-carousel" data-carousel></div>
-                            <div class="subsection">
-                                <h3>Key Insights</h3>
-                                <p>Across the research, three things mattered most: <strong>personalized</strong> guidance, <strong>trustworthy</strong> sources, and <strong>accurate</strong> information.</p>
-
-                                <div class="insights-grid">
-                                    <div class="insight-card">
-                                        <h4>Preferred Features for Online Resources</h4>
-                                        <p>Users want quick ways to narrow and find relevant information without information overload.</p>
-                                    </div>
-                                    <div class="insight-card">
-                                        <h4>Visual & Functional Elements</h4>
-                                        <p>Clarity comes from scannable layouts, simple language, and obvious next steps.</p>
-                                    </div>
-                                    <div class="insight-card">
-                                        <h4>Resource Utilization & Challenges</h4>
-                                        <p>Search is often fragmented across many places; switching costs reduce follow-through.</p>
-                                    </div>
-                                    <div class="insight-card">
-                                        <h4>Mental Health Needs</h4>
-                                        <p>Support needs vary. Users look for reassurance, guidance, and credible routes to help.</p>
-                                    </div>
-                                    <div class="insight-card">
-                                        <h4>Perception of AI in Mental Health Resources</h4>
-                                        <p>AI is accepted when it’s transparent, grounded in trusted sources, and not “diagnosing”.</p>
-                                    </div>
-                                    <div class="insight-card">
-                                        <h4>Comfort with AI in Seeking Mental Health Support</h4>
-                                        <p>Comfort increases when the user stays in control and can verify sources.</p>
-                                    </div>
-                                    <div class="insight-card">
-                                        <h4>Primary Support Network</h4>
-                                        <p>Parents/caregivers and peers influence what resources feel safe to try.</p>
-                                    </div>
-                                    <div class="insight-card">
-                                        <h4>Frequency & Comfort in Mental Health Discussions</h4>
-                                        <p>Language should reduce stigma and make it easier to start the conversation.</p>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="af-personas" class="project-section">
-                        <h2 class="section-title">Personas</h2>
-                        <div class="section-content">
-                            <p>We captured two core personas, <strong>Karly</strong> and <strong>James</strong>, representing different levels of familiarity and support needs.</p>
-                            <div id="af-personas-carousel" class="proto-carousel" data-carousel></div>
-                        </div>
-                    </div>
-
-                    <div id="af-ideation" class="project-section">
-                        <h2 class="section-title">Ideation</h2>
-                        <div class="section-content">
-                            <p>We translated insights into opportunity statements and explored solutions that improved clarity without sacrificing trust.</p>
-
-                            <div class="subsection">
-                                <h3>How Might We</h3>
-                                <p>We reframed the problem into actionable “How might we” prompts that balanced sensitivity, clarity, and trust.</p>
-                            </div>
-
-                            <div class="subsection">
-                                <h3>Brainstorming</h3>
-                                <div id="af-brainstorming-carousel" class="proto-carousel" data-carousel></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="af-prototype" class="project-section">
-                        <h2 class="section-title">Prototype</h2>
-                        <div class="section-content">
-                            <p>We prototyped an “Ask Anna” experience that supports browsing, saving, and returning to curated resources without overwhelming users.</p>
-
-                            <div id="af-proto-carousel" class="proto-carousel" data-carousel></div>
-                        </div>
-                    </div>
-
-                    <div id="af-impact" class="project-section">
-                        <h2 class="section-title">Impact</h2>
-                        <div class="section-content">
-                            <div class="findings-grid">
-                                <div class="finding-item"><span class="finding-label">Lowered the barrier to discovery</span><p>Multiple entry points for “I don’t know what to search”.</p></div>
-                                <div class="finding-item">
-                                    <span class="finding-label">Increased repeatability</span>
-                                    <p>Collections + save flows support returning users.</p>
-                                </div>
-                                <div class="finding-item">
-                                    <span class="finding-label">Maintained trust</span>
-                                    <p>Content remains grounded in curated resources rather than open-ended answers.</p>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- PROJECT DETAIL PAGE (Baro Behavior) -->
-    <div id="project-baro" class="page">
-        <div class="window">
-            <div class="window-body">
-                <div class="sidebar">
-                    <div class="sidebar-section">
-                        <button class="sidebar-back" onclick="navigateTo('home')">Back</button>
-                    </div>
-                    <div class="sidebar-section">
-                        <div class="sidebar-item active" data-section="baro-overview" onclick="scrollToSection(event, 'baro-overview')">Overview</div>
-                        <div class="sidebar-item" data-section="baro-learnings" onclick="scrollToSection(event, 'baro-learnings')">Tech Stack</div>
-                        <div class="sidebar-item" data-section="baro-scope" onclick="scrollToSection(event, 'baro-scope')">Scope</div>
-                        <div class="sidebar-item" data-section="baro-architecture" onclick="scrollToSection(event, 'baro-architecture')">Architecture</div>
-                        <div class="sidebar-item" data-section="baro-learned" onclick="scrollToSection(event, 'baro-learned')">What I Learned</div>
-                    </div>
-                </div>
-                <div class="content-area project-content" id="project-content-baro" data-sections="baro-overview,baro-learnings,baro-scope,baro-architecture,baro-learned">
-                    <p class="project-subtitle">BARO • BEHAVIOR INTERVENTION PLATFORM</p>
-                    <div class="project-banner project-banner-baro">
-                        <div>
-                            <h1>BARO</h1>
-                        </div>
-                    </div>
-                    <div class="project-meta">
-                        <div class="meta-item">
-                            <h3>Role</h3>
-                            <p>Engineering Lead / Full-Stack Developer</p>
-                        </div>
-                        <div class="meta-item">
-                            <h3>Timeline</h3>
-                            <p>October 2025 – December 2025</p>
-                        </div>
-                        <div class="meta-item">
-                            <h3>Team</h3>
-                            <p>6 engineers (led & mentored)</p>
-                        </div>
-                        <div class="meta-item">
-                            <h3>Skills</h3>
-                            <p>Full-Stack · Auth · Supabase · Leadership</p>
-                        </div>
-                    </div>
-                    <p style="margin-bottom: 24px;">I led development of a user-centered web platform that helps teachers onboard students, structure intervention workflows, and securely manage behavior-support data.</p>
-
-                    <div id="baro-overview" class="project-section">
-                        <h2 class="section-title">Overview</h2>
-                        <div class="section-content">
-                            <p>BARO is a web platform designed to support K–12 educators with evidence-based behavior interventions for individual students. The product separates teacher and student experiences, enables secure access, and creates a structured onboarding flow to collect student info and map behavioral needs into a decision-tree foundation for intervention recommendations.</p>
-                        </div>
-                    </div>
-
-                    <div id="baro-learnings" class="project-section">
-                        <h2 class="section-title">Tech Stack</h2>
-                        <div class="section-content">
-                            <div class="about-toolkit-pills">
-                                <span class="about-toolkit-pill">React</span>
-                                <span class="about-toolkit-pill">TypeScript</span>
-                                <span class="about-toolkit-pill">JavaScript</span>
-                                <span class="about-toolkit-pill">Supabase</span>
-                                <span class="about-toolkit-pill">PostgreSQL</span>
-                                <span class="about-toolkit-pill">Google OAuth</span>
-                                <span class="about-toolkit-pill">GitHub</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="baro-scope" class="project-section">
-                        <h2 class="section-title">What I Built (Scope)</h2>
-                        <div class="section-content">
-                            <p>My implementation covered Milestone 1, Milestone 2, and partial Milestone 3.</p>
-                            <div class="subsection">
-                                <h3>Milestone 1 — Teacher + Student Account Creation and Login</h3>
-                                <p><strong>Delivered:</strong></p>
-                                <ul style="margin: 8px 0 0 1.2em; line-height: 1.7;">
-                                    <li>Teacher account creation and login (email/password and Google OAuth)</li>
-                                    <li>Secure authentication flows</li>
-                                    <li>Student login mechanism using unique codes generated after teacher setup</li>
-                                    <li>Foundation for adding a student to a class using a class code</li>
-                                </ul>
-                            </div>
-                            <div class="subsection">
-                                <h3>Milestone 2 — Teacher + Student Dashboard Structure</h3>
-                                <p><strong>Delivered:</strong></p>
-                                <ul style="margin: 8px 0 0 1.2em; line-height: 1.7;">
-                                    <li>Teacher and student dashboard foundations</li>
-                                    <li>Sidebar navigation structure with major sections and tabs</li>
-                                    <li>Base routing for role-based dashboards (Teacher lands on Prep with student cards; Student sees welcome message and lands on Prep)</li>
-                                </ul>
-                            </div>
-                            <div class="subsection">
-                                <h3>Milestone 3 (Partial) — Teacher Prep Tab Pages</h3>
-                                <p><strong>Contributed:</strong></p>
-                                <ul style="margin: 8px 0 0 1.2em; line-height: 1.7;">
-                                    <li>Backend/data foundations to support teacher-led student onboarding steps</li>
-                                    <li>Early integration points for behavior categorization and behavior prioritization workflow</li>
-                                    <li>Data modeling considerations for storing behavior-tree selections</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="baro-architecture" class="project-section">
-                        <h2 class="section-title">Architecture (High-Level)</h2>
-                        <div class="section-content">
-                            <div class="subsection">
-                                <h3>Frontend</h3>
-                                <p>Web application with role-based routing and dashboard experiences.</p>
-                            </div>
-                            <div class="subsection">
-                                <h3>Backend</h3>
-                                <p>Supabase (PostgreSQL) used for teacher login information, student login codes, and behavior tree data storage.</p>
-                            </div>
-                            <div class="subsection">
-                                <h3>Authentication</h3>
-                                <p>Google OAuth for teacher login; secure session handling; role-based access control patterns.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="baro-learned" class="project-section">
-                        <h2 class="section-title">What I Learned</h2>
-                        <div class="section-content">
-                            <ul style="margin: 0 0 0 1.2em; line-height: 1.7;">
-                                <li>Building authentication and data modeling early determines the reliability of the entire product</li>
-                                <li>Technical leadership is as much about clarity and systems as it is about shipping code</li>
-                                <li>Translating domain logic (behavior interventions) into structured data requires tight iteration with stakeholders</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <script>
         let currentPage = 'home';
+
+        function goToPage(url) {
+            document.body.style.transition = 'opacity 0.3s ease';
+            document.body.style.opacity = '0';
+            setTimeout(function() { window.location.href = url; }, 300);
+        }
 
         const PAGE_TITLES = {
             'home': 'Landy Manzanero',
@@ -2952,9 +2478,6 @@
             const isHome = pageId === 'home';
             const isProject = pageId.startsWith('project-');
             document.body.style.overflowY = isHome ? 'auto' : 'hidden';
-            document.body.classList.toggle('no-global-header', isProject);
-            const nav = document.querySelector('.site-nav');
-            if (nav) nav.style.display = isProject ? 'none' : '';
             updatePageTitle(pageId);
         }
 
@@ -2964,12 +2487,25 @@
 
         function getPageIdFromPath() {
             const path = window.location.pathname.replace(/\/$/, '') || '/';
-            return path === '/' ? 'home' : path.slice(1);
+            const segment = path === '/' ? 'home' : path.slice(1);
+            if (segment === 'index.html' || segment.endsWith('/index.html')) return 'home';
+            return segment;
         }
 
         function navigateTo(pageId) {
             showPage(pageId);
             history.pushState({ pageId: pageId }, '', getPagePath(pageId));
+        }
+
+        function goToWorkGallery() {
+            const wasOtherPage = currentPage !== 'home';
+            if (wasOtherPage) {
+                navigateTo('home');
+            }
+            window.setTimeout(function() {
+                const el = document.getElementById('homeGallery');
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, wasOtherPage ? 120 : 0);
         }
 
         // Home gallery is now accessed by scrolling.
@@ -3443,14 +2979,37 @@
             showPage(pageId);
         });
 
-        // Initial load: set history state and handle deep links (/about, /project-commbank, etc.)
+        // Initial load: pathname (/about), hash (#about from index.html#about), or default home
         (function initHistory() {
             const validPages = ['home', 'about', 'work', 'project-commbank', 'project-annafreud', 'project-baro', 'project-sur', 'project-salamati'];
-            const pathPageId = getPageIdFromPath();
+            let pathPageId = getPageIdFromPath();
+            const hashId = window.location.hash.replace(/^#/, '');
+            const scrollToWorkGallery = hashId === 'homeGallery';
+            if (hashId && validPages.includes(hashId)) {
+                pathPageId = hashId;
+            }
             const initialPage = validPages.includes(pathPageId) ? pathPageId : 'home';
 
             if (initialPage !== 'home') showPage(initialPage);
             history.replaceState({ pageId: initialPage }, '', getPagePath(initialPage));
+            if (scrollToWorkGallery && initialPage === 'home') {
+                window.setTimeout(function() {
+                    const el = document.getElementById('homeGallery');
+                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 0);
+            }
+        })();
+
+        (function setupScrollHint() {
+            var hint = document.getElementById('scrollHint');
+            if (!hint) return;
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 80) {
+                    hint.classList.add('is-hidden');
+                } else {
+                    hint.classList.remove('is-hidden');
+                }
+            }, { passive: true });
         })();
     </script>
 </body>

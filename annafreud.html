@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landy Manzanero, Anna Freud</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Baskervville:ital@0;1&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    img { box-shadow: none !important; filter: none; outline: 0; border: 0; }
+    @keyframes pageFadeIn { from { opacity: 0; } to { opacity: 1; } }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+        background: #ffffff; color: #1d1d1f;
+        overflow: hidden; padding-top: 0; cursor: none;
+        animation: pageFadeIn 0.4s ease both;
+    }
+    html, body, a, button, .sidebar-item, .sidebar-back { cursor: none !important; }
+    .cursor-dot {
+        position: fixed; left: 0; top: 0; width: 20px; height: 20px;
+        border-radius: 50%; background: #F3D98F;
+        transform: translate(-50%, -50%); pointer-events: none; z-index: 9999;
+        opacity: 1; transition: opacity 0.15s ease-out, transform 0.12s ease-out;
+    }
+    .cursor-dot.is-hovering { opacity: 0.4; transform: translate(-50%, -50%) scale(0.9); }
+    :root { --af-navy: #232b55; --af-lilac: #5856d6; --af-pink: #f2a7c6; --af-mint: #9fe2d0; }
+    .site-nav {
+        position: fixed; top: 0; left: 0; right: 0;
+        z-index: 1000; height: 60px;
+        display: flex; align-items: center;
+        padding: 0 60px;
+        background: rgba(255,255,255,0.96);
+        backdrop-filter: blur(14px);
+        justify-content: space-between;
+        transition: transform 0.3s ease;
+    }
+    .site-nav.hidden { transform: translateY(-100%); }
+    .nav-left { display: flex; align-items: center; }
+    .nav-logo {
+        font-family: 'DM Sans', -apple-system, sans-serif;
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        color: #1d1d1f;
+        text-decoration: none;
+        text-transform: none;
+    }
+    .nav-right { display: flex; align-items: center; gap: 22px; font-size: 16px; font-weight: 400; }
+    .nav-link {
+        font-family: 'DM Sans', -apple-system, sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        color: #6e6e73;
+        background: none;
+        border: none;
+        text-decoration: none;
+        cursor: pointer;
+        transition: color 0.2s ease;
+        text-transform: lowercase;
+    }
+
+    .site-nav .nav-link:hover,
+    .site-nav .nav-link:focus-visible {
+        background: linear-gradient(90deg, #E36887, #EA7A55, #F3D98F);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .nav-icon-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        border-radius: 999px;
+        border: 1px solid rgba(0,0,0,0.16);
+        color: #1d1d1f;
+        text-decoration: none;
+        transition: background 200ms ease, border-color 200ms ease;
+    }
+    .nav-icon-link:hover,
+    .nav-icon-link:focus-visible {
+        background: rgba(0,0,0,0.06);
+        border-color: rgba(0,0,0,0.32);
+    }
+    .nav-icon-link svg {
+        width: 15px;
+        height: 15px;
+        display: block;
+        fill: currentColor;
+    }
+
+    .window-body { display: flex; height: calc(100vh - 60px); margin-top: 60px; overflow: hidden; }
+    .sidebar { width: 280px; background: transparent; padding: 28px 0; }
+    .sidebar-section { margin-bottom: 24px; }
+    .sidebar-item {
+        padding: 10px 24px; font-size: 17px; color: #8e8e93; cursor: pointer;
+        font-family: 'Inter', -apple-system, sans-serif;
+        transition: background 0.15s, color 0.15s;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: relative;
+    }
+    .sidebar-item:hover { background: rgba(0,0,0,0.03); color: #1d1d1f; }
+    .sidebar-item.active { background: transparent; color: #1d1d1f; font-weight: 600; }
+    .sidebar-back {
+        display: inline-flex; align-items: center; gap: 6px;
+        margin: 0 24px 24px; font-family: inherit; font-size: 16px; font-weight: 400;
+        padding: 0; border: none; background: transparent; color: #8e8e93;
+        cursor: pointer; text-transform: lowercase;
+        transition: color 0.25s ease, background 0.25s ease;
+    }
+    .sidebar-back::before { content: '← '; font-size: inherit; }
+    .sidebar-back:hover, .sidebar-back:focus-visible {
+        background: linear-gradient(90deg, #E36887, #EA7A55, #F3D98F);
+        -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .content-area { flex: 1; overflow-y: auto; padding: 40px 60px; }
+    .content-area.project-content { padding: 40px 48px 60px 48px; }
+    .content-area::-webkit-scrollbar { width: 10px; }
+    .content-area::-webkit-scrollbar-track { background: transparent; }
+    .content-area::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 10px; }
+    .content-area::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.3); }
+    .project-subtitle { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500; color: #8e8e93; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 12px; }
+    .project-banner {
+        border-radius: 0; overflow: hidden; padding: 48px 40px; margin-bottom: 32px;
+        border: none; box-shadow: none; background: #ffffff;
+        display: flex; align-items: center; justify-content: center; min-height: 140px;
+    }
+    .project-banner-annafreud { background: linear-gradient(90deg, #f2a7c6 0%, #c9a8e8 50%, #9fe2d0 100%); }
+    .project-banner-annafreud h1 { color: #ffffff; font-family: 'Inter', sans-serif; font-size: 28px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+    .project-meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; margin-bottom: 48px; }
+    .meta-item h3 { font-size: 11px; font-weight: 500; color: #6e6e73; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; font-family: 'IBM Plex Mono', monospace; }
+    .meta-item p { font-size: 14px; font-weight: 400; color: #8e8e93; line-height: 1.5; }
+    .project-section { margin-bottom: 56px; }
+    .section-title { font-size: 14px; font-weight: 400; color: #8e8e93; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.08em; font-family: 'IBM Plex Mono', monospace; }
+    .section-content { font-size: 15px; line-height: 1.8; color: #8e8e93; font-family: 'Inter', -apple-system, sans-serif; }
+    .section-content p { margin-bottom: 16px; }
+    .section-content strong { color: #1d1d1f; font-weight: 600; }
+    .subsection { margin-top: 32px; }
+    .subsection h3 { font-size: 20px; font-weight: 600; color: #1d1d1f; margin-bottom: 12px; font-family: 'Baskervville', Georgia, serif; }
+    .findings-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px 40px; margin-top: 20px; }
+    .finding-item { padding: 0; background: transparent; }
+    .finding-label { font-family: 'Baskervville', Georgia, serif !important; font-size: 18px; font-weight: 600; color: #1d1d1f; display: block; margin-bottom: 8px; }
+    .finding-item p { font-size: 14px; color: #6e6e73; margin-bottom: 0; line-height: 1.5; }
+    .hmw-question { font-family: 'Baskervville', Georgia, serif; font-size: 22px; font-weight: 600; color: #1d1d1f; line-height: 1.4; margin: 16px 0 24px; }
+    .sprint-led-note { font-size: 13px; line-height: 1.55; margin: 0 0 16px; color: #8e8e93; }
+    .sprint-led-note em { font-style: italic; font-weight: 400; color: #8e8e93; }
+    .case-img { width: 100%; height: auto; display: block; border-radius: 10px; margin: 28px 0 8px; border: 1px solid rgba(0,0,0,0.08); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .case-img.team-photo { width: 80%; max-width: 80%; margin-left: auto; margin-right: auto; }
+    .case-img-caption { font-size: 13px; color: #6e6e73; margin: 0 0 28px; text-align: center; }
+    .case-img-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0 8px; }
+    .case-img-row img { width: 100%; height: auto; display: block; border-radius: 10px; border: 1px solid rgba(0,0,0,0.08); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+
+    .case-img-browser {
+        width: 100%;
+        border-radius: 10px;
+        border: 1px solid rgba(0,0,0,0.1);
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        margin: 28px 0 8px;
+    }
+    .case-img-browser-bar {
+        background: #f5f5f7;
+        border-bottom: 1px solid rgba(0,0,0,0.08);
+        padding: 8px 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .case-img-browser-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+    }
+    .case-img-browser-url {
+        flex: 1;
+        margin: 0 10px;
+        background: rgba(0,0,0,0.06);
+        border-radius: 4px;
+        height: 18px;
+    }
+    .case-img-browser img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+        margin: 0;
+    }
+    .case-img-row .case-img-browser { margin: 0; }
+    .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 24px 0; }
+    .stat-item { text-align: left; padding: 20px 24px; background: rgba(245,245,247,0.6); border-radius: 10px; }
+    .stat-num { font-family: 'Baskervville', Georgia, serif; font-size: 36px; font-weight: 600; color: #1d1d1f; display: block; margin-bottom: 4px; }
+    .stat-label { font-size: 13px; color: #8e8e93; line-height: 1.4; }
+    .numbered-insights { counter-reset: insight; list-style: none; padding: 0; margin-top: 20px; }
+    .numbered-insights li { counter-increment: insight; padding: 16px 0 16px 52px; position: relative; border-bottom: 1px solid rgba(0,0,0,0.06); }
+    .numbered-insights li:before { content: counter(insight, decimal-leading-zero); position: absolute; left: 0; top: 16px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 600; color: var(--af-lilac); width: 36px; }
+    .numbered-insights li strong { display: block; color: #1d1d1f; font-size: 15px; margin-bottom: 4px; }
+    .numbered-insights li span { font-size: 14px; color: #8e8e93; line-height: 1.55; }
+    .interview-quote { border-left: 3px solid rgba(0,0,0,0.1); padding: 14px 20px; margin: 20px 0; font-style: italic; color: #6e6e73; font-size: 15px; line-height: 1.7; }
+    .interview-source { font-style: normal; font-size: 11px; color: #8e8e93; margin-top: 8px; font-family: 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: 0.08em; }
+
+    .persona-hover-wrap {
+        position: relative;
+        border-radius: 10px;
+        overflow: hidden;
+        cursor: default;
+    }
+    .persona-hover-wrap img {
+        width: 100%;
+        height: auto;
+        display: block;
+        transition: filter 0.35s ease;
+        border-radius: 10px;
+    }
+    .persona-hover-wrap:hover img {
+        filter: brightness(0.35);
+    }
+    .persona-hover-text {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        opacity: 0;
+        transition: opacity 0.35s ease;
+        text-align: center;
+    }
+    .persona-hover-wrap:hover .persona-hover-text {
+        opacity: 1;
+    }
+    .persona-hover-text p {
+        font-size: 16px;
+        font-weight: 500;
+        color: #ffffff;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    .pain-point-pills {
+        display: flex;
+        gap: 12px;
+        margin: 24px 0;
+        flex-wrap: wrap;
+    }
+    .pain-point-pill {
+        border: 1px solid rgba(0,0,0,0.12);
+        border-radius: 999px;
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #1d1d1f;
+        cursor: pointer;
+        transition: background 0.2s ease, border-color 0.2s ease;
+        user-select: none;
+    }
+    .pain-point-pill:hover {
+        background: rgba(245,245,247,0.8);
+    }
+    .pain-point-pill.is-open {
+        background: #1d1d1f;
+        color: #ffffff;
+        border-color: #1d1d1f;
+        border-radius: 14px;
+    }
+    .pain-point-desc {
+        display: none;
+        font-size: 14px;
+        color: #6e6e73;
+        line-height: 1.6;
+        padding: 14px 20px;
+        border: 1px solid rgba(0,0,0,0.08);
+        border-radius: 10px;
+        margin-top: -4px;
+        margin-bottom: 12px;
+        background: rgba(245,245,247,0.5);
+    }
+    .pain-point-desc.is-open {
+        display: block;
+    }
+
+    .usability-timeline { margin-top: 28px; position: relative; }
+    .usability-timeline .timeline-duration { font-size: 14px; color: #8e8e93; margin-bottom: 20px; }
+    .usability-timeline .timeline-steps {
+        display: flex; flex-direction: column; position: relative; padding-left: 28px;
+    }
+    .usability-timeline .timeline-steps::before {
+        content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-radius: 2px;
+        background: linear-gradient(180deg, #f2a7c6 0%, #c9a8e8 50%, #9fe2d0 100%);
+    }
+    .usability-timeline .timeline-step { padding: 20px 0; position: relative; }
+    .usability-timeline .timeline-step:not(:last-child) { border-bottom: 1px solid rgba(0,0,0,0.06); }
+    .usability-timeline .timeline-step .finding-label { display: block; margin-bottom: 6px; }
+    .usability-timeline .timeline-step p { font-size: 14px; line-height: 1.55; color: #8e8e93; margin-bottom: 0; }
+
+    .feature-two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        align-items: start;
+        margin: 28px 0 48px;
+    }
+    .feature-two-col img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 10px;
+        border: 1px solid rgba(0,0,0,0.08);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .feature-decisions {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding-top: 8px;
+    }
+    .feature-decision {
+        padding-left: 16px;
+        border-left: 2px solid rgba(0,0,0,0.08);
+    }
+    .feature-decision strong {
+        display: block;
+        font-weight: 600;
+        color: #1d1d1f;
+        margin-bottom: 4px;
+        font-family: 'Baskervville', Georgia, serif;
+        font-size: 16px;
+    }
+    .feature-decision p {
+        font-size: 13px;
+        color: #6e6e73;
+        line-height: 1.55;
+        margin: 0;
+    }
+
+    @media (max-width: 768px) {
+        .site-nav { padding: 0 20px; height: 56px; }
+        .nav-right { gap: 14px; font-size: 13px; }
+        .cursor-dot { display: none !important; }
+        html, body, a, button, .sidebar-item, .sidebar-back { cursor: auto !important; }
+        .sidebar { display: none; }
+        .content-area { padding: 24px 20px; }
+        .project-meta { grid-template-columns: repeat(2, 1fr); }
+        .findings-grid { grid-template-columns: repeat(2, 1fr); }
+        .stat-row { grid-template-columns: 1fr; }
+        .case-img-row { grid-template-columns: 1fr; }
+        .persona-hover-wrap img {
+            filter: none !important;
+        }
+        .persona-hover-text {
+            opacity: 1 !important;
+            position: static;
+            padding: 12px 0 0;
+        }
+        .persona-hover-text p {
+            color: #6e6e73;
+            font-size: 14px;
+        }
+        .feature-two-col {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .fade-up {
+        opacity: 0;
+        transform: translateY(24px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .fade-up {
+            opacity: 1;
+            transform: none;
+            transition: none;
+        }
+    }
+    </style>
+</head>
+<body>
+<nav class="site-nav">
+  <div class="nav-left">
+    <a class="nav-logo" href="index.html">Landy Manzanero</a>
+  </div>
+  <div class="nav-right">
+    <a class="nav-link" href="index.html#homeGallery">work</a>
+    <a class="nav-link" href="index.html#about">about</a>
+    <a class="nav-link" href="assets/Landy_Manzanero_Resume.pdf" target="_blank">resume</a>
+    <a class="nav-icon-link" href="https://www.linkedin.com/in/landynmanzanero/" target="_blank" rel="noopener" aria-label="LinkedIn">
+      <svg viewBox="0 0 24 24" aria-hidden="true" style="width:15px;height:15px;display:block;fill:currentColor;">
+        <rect x="3" y="3" width="18" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"></rect>
+        <rect x="7" y="10" width="2" height="7" fill="currentColor"></rect>
+        <circle cx="8" cy="7" r="1.2" fill="currentColor"></circle>
+        <path d="M12.5 10h1.9v1c.4-.7 1.1-1.2 2.1-1.2 1.6 0 2.7 1 2.7 3.1v3.9h-2.1v-3.5c0-1-.3-1.6-1.1-1.6-.9 0-1.3.7-1.3 1.7v3.4h-2.2z" fill="currentColor"></path>
+      </svg>
+    </a>
+    <a class="nav-icon-link" href="mailto:landynmanzanero@berkeley.edu" aria-label="Email">
+      <svg viewBox="0 0 24 24" aria-hidden="true" style="width:15px;height:15px;display:block;fill:currentColor;">
+        <rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"></rect>
+        <polyline points="5,7 12,12 19,7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></polyline>
+      </svg>
+    </a>
+  </div>
+</nav>
+<div class="window-body">
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <button class="sidebar-back" onclick="goBack()">Back</button>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-item active" data-section="af-overview" onclick="scrollToSection('af-overview')">Overview</div>
+                <div class="sidebar-item" data-section="af-myrole" onclick="scrollToSection('af-myrole')">My Role</div>
+                <div class="sidebar-item" data-section="af-research" onclick="scrollToSection('af-research')">Research</div>
+                <div class="sidebar-item" data-section="af-synthesis" onclick="scrollToSection('af-synthesis')">Synthesis</div>
+                <div class="sidebar-item" data-section="af-personas" onclick="scrollToSection('af-personas')">Personas</div>
+                <div class="sidebar-item" data-section="af-ideation" onclick="scrollToSection('af-ideation')">Ideation</div>
+                <div class="sidebar-item" data-section="af-prototype" onclick="scrollToSection('af-prototype')">Prototype</div>
+                <div class="sidebar-item" data-section="af-impact" onclick="scrollToSection('af-impact')">Impact</div>
+                <div class="sidebar-item" data-section="af-reflect" onclick="scrollToSection('af-reflect')">Reflections</div>
+            </div>
+        </div>
+
+        <div class="content-area project-content">
+            <div class="project-subtitle">UX Research &middot; Product Design &middot; Mental Health</div>
+            <div class="project-banner project-banner-annafreud"><h1>Anna Freud</h1></div>
+            <div class="project-meta">
+                <div class="meta-item"><h3>My Role</h3><p>Product Designer</p></div>
+                <div class="meta-item"><h3>Timeline</h3><p>January &ndash; May 2025</p></div>
+                <div class="meta-item"><h3>Team</h3><p>1 PM<br>4 Designers</p></div>
+                <div class="meta-item"><h3>Skills</h3><p>UX Strategy<br>Research<br>Prototyping</p></div>
+            </div>
+
+<div id="af-overview" class="project-section">
+  <h2 class="section-title">Overview</h2>
+  <div class="section-content">
+    <p>Anna Freud has spent over 70 years supporting children and young people&rsquo;s mental health. Their website is one of the main ways families access that guidance, but finding the right resource was fragmented, overwhelming, and often led parents to give up before they found what they needed.</p>
+    <div class="hmw-question">How might we provide young people and their families easier access to trusted information about mental health?</div>
+  </div>
+</div>
+
+<div id="af-myrole" class="project-section">
+  <h2 class="section-title">My Role</h2>
+  <div class="section-content">
+    <p>I led Sprint 2, the synthesis phase. After the team completed surveys, interviews, and usability tests, it was my job to make sense of what we heard.</p>
+    <p>Synthesis was one of the most collaborative parts of the project. Everyone had to be attentive and present, and so many ideas surfaced just through the conversation of comparing what we each took away from the interviews. It felt less like organizing data and more like the team developing a shared point of view together.</p>
+    <p>Those decisions made in synthesis trace directly back to the two features we ultimately designed.</p>
+  </div>
+</div>
+
+<div id="af-research" class="project-section">
+  <h2 class="section-title">Research</h2>
+  <div class="section-content">
+    <div class="subsection">
+      <h3>Secondary Research</h3>
+      <p>We looked at three platforms doing adjacent work: Earkick, Reach RX, and Sonar. Three qualities emerged as the benchmark for trusted mental health resources: personalized, trustworthy, and accurate.</p>
+    </div>
+    <div class="subsection">
+      <h3>Survey</h3>
+      <p>We reached 27 participants across four age groups through online forums, schools, families, and UC Berkeley networks.</p>
+      <div class="stat-row">
+        <div class="stat-item">
+          <span class="stat-num">3.5<span style="font-size:20px;">/5</span></span>
+          <span class="stat-label">Average comfort discussing mental health, open when needed, not consistent</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">3.1<span style="font-size:20px;">/5</span></span>
+          <span class="stat-label">Average frequency of parent&#8211;child mental health discussion, occasional, not persistent</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">2.7<span style="font-size:20px;">/5</span></span>
+          <span class="stat-label">Average comfort with AI-based tools, a trust gap we had to design around</span>
+        </div>
+      </div>
+      <p>That 2.7 score changed how we thought about the whole product. We knew we didn&rsquo;t want it to feel personable. We wanted it to feel factual, because what comforts a parent most is knowing that what they&rsquo;re reading is rooted in real information, not an agent trying to be their friend.</p>
+    </div>
+    <div class="subsection">
+      <h3>Interviews</h3>
+      <p>We ran 15 to 20 minute interviews organized around three themes: parent confidence and support needs, trust and perception of AI, and barriers to accessing mental health resources.</p>
+      <div class="interview-quote">&#8220;Mental health professionals are well intended but don&#8217;t see the whole picture and it&#8217;s not their problem. It&#8217;s their job, but it&#8217;s our life.&#8221;<p class="interview-source">Interview Participant</p></div>
+      <div class="interview-quote">&#8220;If you don&#8217;t have a background in this area it can be very confusing.&#8221;<p class="interview-source">Interview Participant</p></div>
+      <div class="interview-quote">&#8220;I think AI can be pretty helpful in summarizing information. I&#8217;m concerned about the accuracy because I know AI can lie sometimes.&#8221;<p class="interview-source">Interview Participant</p></div>
+      <div class="interview-quote">&#8220;The ups and downs of having a kid with special needs is complex. When you add the times when you don&#8217;t have care, when you don&#8217;t have somebody to follow-up with, it makes it a lot more stressful for the parent. And you don&#8217;t know what to do.&#8221;<p class="interview-source">Interview Participant</p></div>
+      <div class="pain-point-pills">
+        <div class="pain-point-pill" id="pill-fragmented" onclick="togglePainPoint('fragmented')">
+          Fragmented experience
+        </div>
+        <div class="pain-point-pill" id="pill-barriers" onclick="togglePainPoint('barriers')">
+          Systemic barriers
+        </div>
+      </div>
+      <div class="pain-point-desc" id="pp-fragmented">
+        Parents searched across multiple platforms, hit cluttered navigation, and often gave up before finding anything actionable. There was no single trusted home.
+      </div>
+      <div class="pain-point-desc" id="pp-barriers">
+        Access depended heavily on insurance, digital literacy, and prior awareness of where to even look. Parents without a background in mental health had no map.
+      </div>
+    </div>
+    <div class="subsection">
+      <h3>Usability Testing</h3>
+      <div class="usability-timeline">
+        <div class="timeline-steps">
+          <div class="timeline-step">
+            <span class="finding-label">Before</span>
+            <p>Questions to understand existing habits and familiar resources.</p>
+          </div>
+          <div class="timeline-step">
+            <span class="finding-label">During</span>
+            <p>Participants screen-shared and thought aloud while navigating a new resource.</p>
+          </div>
+          <div class="timeline-step">
+            <span class="finding-label">After</span>
+            <p>Questions about navigation, visual design, and presentation. Content evaluation deliberately excluded.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="af-synthesis" class="project-section">
+  <h2 class="section-title">Synthesis</h2>
+  <div class="section-content">
+    <p class="sprint-led-note"><em>This is the sprint I led.</em></p>
+    <div class="subsection">
+      <h3>Affinity Mapping</h3>
+      <p>We organized everything into eight clusters and let the conversation run. A lot of the most useful insights came out of discussing what we each heard.</p>
+      <img src="assets/images/annafreud/Affinity Mapping.png" alt="Affinity mapping session" class="case-img">
+    </div>
+    <div class="subsection">
+      <h3>Empathy Mapping</h3>
+      <p>We built a composite picture of our primary user: a parent navigating their child&rsquo;s mental health without a prior framework for doing so.</p>
+      <img src="assets/images/annafreud/Empathy Mapping.png" alt="Empathy map" class="case-img">
+    </div>
+    <div class="subsection">
+      <h3>Four Insight Statements</h3>
+      <p>Four things kept coming up across every cluster. These became the filter every design decision ran through.</p>
+      <ol class="numbered-insights">
+        <li><strong>Trust is a major barrier.</strong><span>Parents are skeptical of medical professionals and AI tools alike, due to past negative experiences, perceived lack of empathy, or fear of misinformation. Any solution must make its sources and reasoning visible.</span></li>
+        <li><strong>Parents want tools that are clear, visual, and emotionally accessible.</strong><span>Cluttered, dense, or clinically toned platforms cause abandonment. Design must reduce cognitive load, not add to it.</span></li>
+        <li><strong>Lived experience matters more than clinical authority.</strong><span>Stories, testimonials, and peer advice from other parents are more trusted than institutional guidance alone.</span></li>
+        <li><strong>Stigma makes parents avoid the topic, and avoid seeking help.</strong><span>Resources need to meet parents where they are, with language that reduces shame rather than amplifying it.</span></li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div id="af-personas" class="project-section">
+  <h2 class="section-title">Personas</h2>
+  <div class="section-content">
+    <div class="case-img-row">
+      <div class="persona-hover-wrap">
+        <img src="assets/images/annafreud/User Persona - Experienced.png" alt="Karly persona">
+        <div class="persona-hover-text">
+          <p>Her frustration isn&rsquo;t access. It&rsquo;s volume and navigation.</p>
+        </div>
+      </div>
+      <div class="persona-hover-wrap">
+        <img src="assets/images/annafreud/User Persona - Inexperienced.png" alt="James persona">
+        <div class="persona-hover-text">
+          <p>He doesn&rsquo;t know what questions to ask, who to trust, or where to begin.</p>
+        </div>
+      </div>
+    </div>
+    <div class="subsection">
+      <h3>The Key Difference</h3>
+      <p>Karly needs better filtering and navigation. James needs a non-judgmental, low-barrier entry point that doesn&#8217;t assume prior knowledge. Any solution that works for James almost certainly works for Karly. Any solution designed only for Karly leaves James behind. We designed for James.</p>
+    </div>
+  </div>
+</div>
+
+<div id="af-ideation" class="project-section">
+  <h2 class="section-title">Ideation</h2>
+  <div class="section-content">
+    <p>We generated concepts using How Might We prompts derived from our four insight statements, then evaluated ideas across impact and feasibility.</p>
+    <div class="case-img-row">
+      <img src="assets/images/annafreud/Ideating changes based on feedback .png" alt="Ideating changes">
+      <img src="assets/images/annafreud/Effort Impact Matrix.png" alt="Effort impact matrix">
+    </div>
+    <p class="case-img-caption">Ideation refinement and effort/impact prioritization</p>
+  </div>
+</div>
+
+<div id="af-prototype" class="project-section">
+  <h2 class="section-title">Prototype</h2>
+  <div class="section-content">
+    <p>We delivered two features. Each traces directly to the insight statements and persona findings from synthesis.</p>
+    <div class="subsection">
+      <h3>Feature 1: Ask Anna AI</h3>
+      <p>Parents like James don&#8217;t know what to search for. Ask Anna solves the blank page problem by giving them a starting point, and parents like Karly the structure to find what&#8217;s actually relevant.</p>
+
+      <div class="feature-two-col">
+        <img src="assets/images/annafreud/AskAnnaAI Home.png" alt="Ask Anna homepage">
+        <div class="feature-decisions">
+          <div class="feature-decision">
+            <strong>FAQ pre-population</strong>
+            <p>Three suggested questions appear by default. James doesn&#8217;t know what to search. Giving him a starting point removes the barrier entirely.</p>
+          </div>
+          <div class="feature-decision">
+            <strong>Parent Testimonials as first-class content</strong>
+            <p>Lived experience is treated as a real result type, not buried. Parents who trust other parents before institutions can navigate directly to it.</p>
+          </div>
+          <div class="feature-decision">
+            <strong>Transparent mechanism</strong>
+            <p>The 2.7/5 AI comfort score meant we couldn&#8217;t introduce this as just another chatbot. The design frames it as search backed by Anna Freud&#8217;s curated content. Trust gets designed in.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-two-col">
+        <img src="assets/images/annafreud/AskAnnaAI home 2.png" alt="Ask Anna results">
+        <div class="feature-decisions">
+          <div class="feature-decision">
+            <strong>Filter categories on results</strong>
+            <p>Results organized by type: General Information, Symptoms, Coping Strategies, Find Support, Parent Testimonials. Karly&#8217;s core pain point was too much information without structure. This solves it.</p>
+          </div>
+          <div class="feature-decision">
+            <strong>Collections link from within Ask Anna</strong>
+            <p>Ask Anna connects directly to saved content so it works as a starting point for an ongoing returnable resource library, not a one-way search.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="subsection">
+      <h3>Feature 2: Bookmarks and Collections</h3>
+      <p>Our usability testing kept surfacing the same behavior: parents wanted to save things and come back. Without a system for that, a useful resource found in a moment of stress has no guaranteed way of being found again.</p>
+
+      <div class="feature-two-col">
+        <img src="assets/images/annafreud/AskAnnaAI collections.png" alt="Collections view">
+        <div class="feature-decisions">
+          <div class="feature-decision">
+            <strong>Named visual collections</strong>
+            <p>Parents organize by child, condition, or situation. Not by diagnosis code. This mirrors how parents actually think about their situation.</p>
+          </div>
+          <div class="feature-decision">
+            <strong>Suggest new resources</strong>
+            <p>Once a parent has saved content, the system surfaces related resources they haven&#8217;t found yet. Personalization without requiring them to already know what they&#8217;re looking for.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-two-col">
+        <img src="assets/images/annafreud/AskAnnaAI bookmarks.png" alt="Bookmarks view">
+        <div class="feature-decisions">
+          <div class="feature-decision">
+            <strong>Save in one interaction</strong>
+            <p>Saving an article and adding it to a collection happens without navigating away from the content. Parents are often searching in high-stress, time-sensitive moments. Friction here is friction at the worst possible time.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="af-impact" class="project-section">
+  <h2 class="section-title">Impact</h2>
+  <div class="section-content">
+    <div class="subsection">
+      <h3>What the Features Address</h3>
+      <div class="findings-grid">
+        <div class="finding-item">
+          <span class="finding-label">Lowered the barrier to discovery</span>
+          <p>Multiple entry points for &ldquo;I don&#8217;t know what to search&rdquo;.</p>
+        </div>
+        <div class="finding-item">
+          <span class="finding-label">Increased repeatability</span>
+          <p>Collections + save flows support returning users.</p>
+        </div>
+        <div class="finding-item">
+          <span class="finding-label">Maintained trust</span>
+          <p>Content remains grounded in curated resources rather than open-ended answers.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="af-reflect" class="project-section">
+  <h2 class="section-title">Reflections</h2>
+  <div class="section-content">
+    <div class="subsection">
+      <h3>On Scope</h3>
+      <p>Our original HMW asked about &#8220;young people and their families.&#8221; By the time we reached synthesis, it was clear that parents were carrying the heaviest burden in this system, searching alone, without a framework, under stress. Narrowing scope to parents wasn&#8217;t a constraint. It was the honest finding. Designing for James, the most underserved, least digitally confident user in our research, meant designing something that would work for everyone.</p>
+    </div>
+    <div class="subsection">
+      <h3>On Trust and AI</h3>
+      <p>The tension between &#8220;AI can help&#8221; and &#8220;parents don&#8217;t trust AI&#8221; was the most interesting design problem in this project. The solution wasn&#8217;t to hide the AI or oversell it. It was to make the mechanism transparent and keep Anna Freud&#8217;s curated content, a trusted institution, visibly in control of what the AI surfaces. Trust gets designed in. It doesn&#8217;t come free with the technology.</p>
+    </div>
+    <div class="subsection">
+      <h3>What I&#8217;d Do Differently</h3>
+      <p>We didn&#8217;t test our final prototype with actual parents before presenting. Given that the core insight was about trust and first impressions, a round of usability testing on Ask Anna&#8217;s homepage would have been high value, focused on whether the framing of &#8220;AI-powered&#8221; helps or hurts initial trust. That&#8217;s the test I wish we had run.</p>
+    </div>
+    <div class="subsection" style="margin-top:40px;">
+      <h3>The Team</h3>
+      <p>Thank you to this incredible team for making my first project such a meaningful and memorable one!</p>
+      <img src="assets/images/annafreud/AnnaFreud Team.PNG" alt="Anna Freud team" class="case-img team-photo">
+      <p class="team-names-inline" style="margin:24px 0 0;text-align:center;font-size:15px;line-height:1.6;color:#8e8e93;font-weight:400;">
+        <span>Mira Ercingoz</span><span style="color:rgba(0,0,0,0.22);margin:0 0.65em;user-select:none;" aria-hidden="true">&middot;</span><span>Hailie Atkinson</span><span style="color:rgba(0,0,0,0.22);margin:0 0.65em;user-select:none;" aria-hidden="true">&middot;</span><span>Lila Portis</span><span style="color:rgba(0,0,0,0.22);margin:0 0.65em;user-select:none;" aria-hidden="true">&middot;</span><span>Jolla Rae Ngabdi</span>
+      </p>
+    </div>
+  </div>
+</div>
+
+        </div><!-- end content-area -->
+    </div><!-- end window-body -->
+<script>
+function goBack() {
+    document.body.style.transition = 'opacity 0.3s ease';
+    document.body.style.opacity = '0';
+    setTimeout(function() { window.location.href = 'index.html'; }, 300);
+}
+function setActiveSidebar(sectionId) {
+    document.querySelectorAll('.sidebar-item[data-section]').forEach(function(item) {
+        item.classList.toggle('active', item.getAttribute('data-section') === sectionId);
+    });
+}
+function scrollToSection(sectionId) {
+    var section = document.getElementById(sectionId);
+    var ca = document.querySelector('.content-area.project-content');
+    if (section && ca) {
+        ca.scrollTo({ top: section.offsetTop - 40, behavior: 'smooth' });
+        setActiveSidebar(sectionId);
+    }
+}
+(function setupScrollSync() {
+    var ca = document.querySelector('.content-area.project-content');
+    if (!ca) return;
+    var sections = Array.from(document.querySelectorAll('.project-section[id]'));
+    ca.addEventListener('scroll', function() {
+        var scrollTop = ca.scrollTop;
+        var active = sections[0];
+        sections.forEach(function(s) { if (s.offsetTop - 80 <= scrollTop) active = s; });
+        if (active) setActiveSidebar(active.id);
+    }, { passive: true });
+})();
+(function setupCursor() {
+    var dot = document.createElement('div');
+    dot.className = 'cursor-dot';
+    document.body.appendChild(dot);
+    document.addEventListener('pointermove', function(e) {
+        dot.style.left = e.clientX + 'px';
+        dot.style.top = e.clientY + 'px';
+    });
+    var sel = 'a, button, .sidebar-item, .sidebar-back';
+    document.addEventListener('pointerover', function(e) {
+        if (e.target instanceof Element && e.target.closest(sel)) dot.classList.add('is-hovering');
+    });
+    document.addEventListener('pointerout', function(e) {
+        if (e.target instanceof Element && e.target.closest(sel)) dot.classList.remove('is-hovering');
+    });
+})();
+(function setupNavHide() {
+    var nav = document.querySelector('.site-nav');
+    var ca = document.querySelector('.content-area.project-content');
+    if (!nav || !ca) return;
+    var lastScroll = 0;
+    ca.addEventListener('scroll', function() {
+        var current = ca.scrollTop;
+        if (current > lastScroll && current > 60) {
+            nav.classList.add('hidden');
+        } else {
+            nav.classList.remove('hidden');
+        }
+        lastScroll = current;
+    }, { passive: true });
+})();
+function togglePainPoint(id) {
+    var pill = document.getElementById('pill-' + id);
+    var desc = document.getElementById('pp-' + id);
+    if (!pill || !desc) return;
+    var isOpen = desc.classList.contains('is-open');
+    document.querySelectorAll('.pain-point-desc').forEach(function(d) {
+        d.classList.remove('is-open');
+    });
+    document.querySelectorAll('.pain-point-pill').forEach(function(p) {
+        p.classList.remove('is-open');
+    });
+    if (!isOpen) {
+        desc.classList.add('is-open');
+        pill.classList.add('is-open');
+    }
+}
+(function setupFadeIn() {
+    var scrollRoot = document.querySelector('.content-area.project-content');
+    if (!scrollRoot) return;
+    var els = scrollRoot.querySelectorAll(
+        '.project-subtitle, .project-section, .case-img, .case-img-browser, ' +
+        '.case-img-row, .findings-grid, .finding-item, ' +
+        '.interview-quote, .research-table, .subsection, ' +
+        '.stat-row, .numbered-insights, .milestone-grid, .pain-point-pills, ' +
+        '.usability-timeline, .feature-two-col, ' +
+        '.takeaway-block, .project-meta, .project-banner, .persona-hover-wrap'
+    );
+    els.forEach(function(el) {
+        el.classList.add('fade-up');
+    });
+    if (!('IntersectionObserver' in window)) {
+        els.forEach(function(el) { el.classList.add('is-visible'); });
+        return;
+    }
+    var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { root: scrollRoot, threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function(el) { observer.observe(el); });
+})();
+</script>
+</body>
+</html>
