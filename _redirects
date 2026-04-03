@@ -1,1 +1,7 @@
-/*    /index.html   200
+# Legacy case-study filenames → pretty URLs (folders with index.html)
+/commonwealth.html   /commonwealth/   301
+/annafreud.html      /annafreud/      301
+/baro.html           /baro/           301
+
+# SPA fallback: only when no static file matches (Netlify checks files first)
+/*                   /index.html      200

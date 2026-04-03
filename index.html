@@ -2157,11 +2157,11 @@
 <body>
     <header class="site-nav">
         <div class="nav-left">
-            <a class="nav-logo" href="index.html">Landy Manzanero</a>
+            <a class="nav-logo" href="./" onclick="event.preventDefault(); navigateTo('home'); window.scrollTo({ top: 0, behavior: 'auto' });">Landy Manzanero</a>
         </div>
         <div class="nav-right">
-            <a class="nav-link" href="index.html#homeGallery">work</a>
-            <a class="nav-link" href="index.html#about" onclick="event.preventDefault(); navigateTo('about');">about</a>
+            <a class="nav-link" href="./" onclick="event.preventDefault(); goToWorkGallery();">work</a>
+            <a class="nav-link" href="about" onclick="event.preventDefault(); navigateTo('about');">about</a>
             <a class="nav-link" href="assets/Landy_Manzanero_Resume.pdf" target="_blank">resume</a>
             <a class="nav-icon-link" href="https://www.linkedin.com/in/landynmanzanero/"
                target="_blank" rel="noopener" aria-label="LinkedIn">
@@ -2227,7 +2227,7 @@
             <p class="selected-work-label">Selected Work</p>
             <div class="gallery-grid">
                 <div class="gallery-card gallery-card-hero"
-                     onclick="goToPage('commonwealth.html')" role="button" tabindex="0">
+                     onclick="goToPage('commonwealth/')" role="button" tabindex="0">
                     <div class="gallery-card-img"
                          style="background-image: url('assets/images/commonwealth/CommBank%20Banner.png');"></div>
                     <div class="gallery-card-dim"></div>
@@ -2248,7 +2248,7 @@
                 </div>
                 <div class="gallery-grid-bottom">
                     <div class="gallery-card gallery-card-small"
-                         onclick="goToPage('annafreud.html')" role="button" tabindex="0">
+                         onclick="goToPage('annafreud/')" role="button" tabindex="0">
                         <div class="gallery-card-img"
                              style="background-image: url('assets/images/annafreud/Anna Freud Cover.png');"></div>
                         <div class="gallery-card-dim"></div>
@@ -2268,7 +2268,7 @@
                         </div>
                     </div>
                     <div class="gallery-card gallery-card-small"
-                         onclick="goToPage('baro.html')" role="button" tabindex="0">
+                         onclick="goToPage('baro/')" role="button" tabindex="0">
                         <div class="gallery-card-img"
                              style="background-image: url('assets/images/baro/Baro Cover.png');"></div>
                         <div class="gallery-card-dim"></div>
@@ -2406,7 +2406,9 @@
             if (pendingNavTimeout) clearTimeout(pendingNavTimeout);
             pendingNavTimeout = setTimeout(function() {
                 pendingNavTimeout = null;
-                window.location.href = url;
+                var slug = String(url).replace(/\.html\/?$/, '').replace(/^\.\//, '');
+                if (slug && !slug.endsWith('/')) slug += '/';
+                window.location.href = slug;
             }, 300);
         }
 
@@ -2462,7 +2464,8 @@
             document.body.style.transition = 'opacity 0.3s ease';
             document.body.style.opacity = '1';
 
-            document.getElementById(currentPage).classList.remove('active');
+            const prevEl = document.getElementById(currentPage);
+            if (prevEl) prevEl.classList.remove('active');
             pageEl.classList.add('active');
             currentPage = pageId;
 
@@ -2485,15 +2488,37 @@
             updatePageTitle(pageId);
         }
 
+        function getSpaBasePath() {
+            let pathname = window.location.pathname;
+            if (pathname.endsWith('index.html') || pathname.endsWith('index.htm')) {
+                return pathname.slice(0, pathname.lastIndexOf('/') + 1);
+            }
+            if (pathname === '/' || pathname === '') {
+                return '/';
+            }
+            if (pathname.endsWith('/')) {
+                return pathname;
+            }
+            const lastSlash = pathname.lastIndexOf('/');
+            return lastSlash <= 0 ? '/' : pathname.slice(0, lastSlash + 1);
+        }
+
         function getPagePath(pageId) {
-            return pageId === 'home' ? '/' : '/' + pageId;
+            const base = getSpaBasePath();
+            if (pageId === 'home') {
+                return base;
+            }
+            const dir = base.replace(/\/+$/, '');
+            return (dir === '' ? '' : dir) + '/' + pageId;
         }
 
         function getPageIdFromPath() {
             const path = window.location.pathname.replace(/\/$/, '') || '/';
-            const segment = path === '/' ? 'home' : path.slice(1);
-            if (segment === 'index.html' || segment.endsWith('/index.html')) return 'home';
-            return segment;
+            if (path === '/' || path === '') return 'home';
+            const parts = path.split('/').filter(Boolean);
+            const last = parts[parts.length - 1];
+            if (!last || last === 'index.html' || last.endsWith('.html')) return 'home';
+            return last;
         }
 
         function navigateTo(pageId) {
@@ -2505,6 +2530,8 @@
             const wasOtherPage = currentPage !== 'home';
             if (wasOtherPage) {
                 navigateTo('home');
+            } else {
+                history.replaceState({ pageId: 'home' }, '', getPagePath('home'));
             }
             window.setTimeout(function() {
                 const el = document.getElementById('homeGallery');
@@ -2989,7 +3016,7 @@
             showPage(pageId);
         });
 
-        // Initial load: pathname (/about), hash (#about from index.html#about), or default home
+        // Initial load: pathname (/about), legacy hash #about, or default home (no #homeGallery in bar)
         (function initHistory() {
             const validPages = ['home', 'about', 'work', 'project-commbank', 'project-annafreud', 'project-baro', 'project-sur', 'project-salamati'];
             let pathPageId = getPageIdFromPath();
