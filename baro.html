@@ -17,7 +17,7 @@
     body {
         font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
         background: #ffffff; color: #1d1d1f;
-        overflow: hidden; padding-top: 0; cursor: none;
+        overflow-x: hidden; padding-top: 0; cursor: none;
         animation: pageFadeIn 0.4s ease both;
     }
     html, body, a, button, .sidebar-item, .sidebar-back { cursor: none !important; }
@@ -368,10 +368,12 @@
     </div><!-- end window-body -->
 <script>
 function goBack() {
+    document.body.style.opacity = '1';
     document.body.style.transition = 'opacity 0.3s ease';
     document.body.style.opacity = '0';
-    setTimeout(function() { window.location.href = 'index.html'; }, 300);
+    setTimeout(function() { window.location.href = '/'; }, 300);
 }
+
 function setActiveSidebar(sectionId) {
     document.querySelectorAll('.sidebar-item[data-section]').forEach(function(item) {
         item.classList.toggle('active', item.getAttribute('data-section') === sectionId);
@@ -454,6 +456,11 @@ function scrollToSection(sectionId) {
     }, { root: scrollRoot, threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
     els.forEach(function(el) { observer.observe(el); });
 })();
+
+window.addEventListener('pageshow', function(e) {
+    document.body.style.transition = '';
+    document.body.style.opacity = '1';
+});
 </script>
 </body>
 </html>

@@ -2146,13 +2146,9 @@
 
         /* Desktop: system cursor fully hidden — custom dot only (overrides any cursor:pointer above) */
         @media (min-width: 769px) {
-            html {
-                cursor: none !important;
-            }
-            body,
-            body *,
-            body *::before,
-            body *::after {
+            *,
+            *::before,
+            *::after {
                 cursor: none !important;
             }
         }
@@ -3025,6 +3021,13 @@
                 }
             }, { passive: true });
         })();
+
+        window.addEventListener('pageshow', function(e) {
+            if (e.persisted) {
+                document.body.style.transition = '';
+                document.body.style.opacity = '1';
+            }
+        });
     </script>
 </body>
 </html>
