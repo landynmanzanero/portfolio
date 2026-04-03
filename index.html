@@ -2402,11 +2402,16 @@
 
     <script>
         let currentPage = 'home';
+        var pendingNavTimeout = null;
 
         function goToPage(url) {
             document.body.style.transition = 'opacity 0.3s ease';
             document.body.style.opacity = '0';
-            setTimeout(function() { window.location.href = url; }, 300);
+            if (pendingNavTimeout) clearTimeout(pendingNavTimeout);
+            pendingNavTimeout = setTimeout(function() {
+                pendingNavTimeout = null;
+                window.location.href = url;
+            }, 300);
         }
 
         const PAGE_TITLES = {
@@ -2974,6 +2979,10 @@
 
         // Browser back/forward: sync UI with history state
         window.addEventListener('popstate', function(e) {
+            if (pendingNavTimeout) {
+                clearTimeout(pendingNavTimeout);
+                pendingNavTimeout = null;
+            }
             const validPages = ['home', 'about', 'work', 'project-commbank', 'project-annafreud', 'project-baro', 'project-sur', 'project-salamati'];
             const pageId = (e.state && e.state.pageId) ? e.state.pageId : (validPages.includes(getPageIdFromPath()) ? getPageIdFromPath() : 'home');
             showPage(pageId);
